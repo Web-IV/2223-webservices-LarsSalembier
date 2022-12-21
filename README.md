@@ -37,11 +37,15 @@ DATABASE_PORT=3306
 
 ### App starten
 
-Start de app met het commando `yarn start`.
+Start de app in development-modus met het commando `yarn start`.
+
+Start de app in production-modus met het commando `yarn start:prod`. We gaan er dan vanuit dat alle nodige omgevingsvariabelen zijn ingevuld, er wordt geen `.env`-bestand gelezen met dit commando.
 
 ## Testen
 
-> Schrijf hier hoe we de testen uitvoeren (.env bestanden aanmaken, commando's om uit te voeren...)
+Maak een `.env.test` met een gelijkaardige configuratie als hierboven (gebruik een andere database).
+
+Voer de testen uit met `yarn test`. Om coverage te krijgen voer je `yarn test:coverage` uit.
 
 ## Veelvoorkomende errors
 
