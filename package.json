@@ -1,12 +1,11 @@
 {
-  "scripts": {
-    "start": "nodemon src/index.js"
-  },
+  "name": "webservices-chirosite-backend",
+  "version": "0.0.1",
+  "license": "UNLICENSED",
   "dependencies": {
-    "koa": "^2.14.1",
-    "winston": "^3.8.2"
+    "koa": "^2.13.4"
   },
   "devDependencies": {
-    "nodemon": "^2.0.12"
+    "nodemon": "^2.0.19"
   }
 }
