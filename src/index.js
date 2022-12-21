@@ -1,5 +1,11 @@
 const Koa = require("koa");
+const config = require("config");
 const { getLogger } = require("./core/logging");
+
+const LOG_LEVEL = config.get("logLevel");
+const LOG_DISABLED = config.get("logDisabled");
+
+console.log(`log level ${LOG_LEVEL}, logs enabled: ${!LOG_DISABLED}`);
 
 const app = new Koa();
 const logger = getLogger();
