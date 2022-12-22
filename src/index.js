@@ -1,43 +1,51 @@
-const Koa = require('koa');
-const config = require('config');
-const bodyParser = require('koa-bodyparser');
-const koaCors = require('@koa/cors');
-const { initializeLogger, getLogger } = require('./core/logging');
-const installRest = require('./rest');
+const Koa = require("koa");
+const config = require("config");
+const koaCors = require("@koa/cors");
+const bodyParser = require("koa-bodyparser");
+const { initializeLogger, getLogger } = require("./core/logging");
+const { initializeData } = require("./data");
+const installRest = require("./rest");
 
-const NODE_ENV = config.get('env');
-const CORS_ORIGINS = config.get('cors.origins');
-const CORS_MAX_AGE = config.get('cors.maxAge');
-const LOG_LEVEL = config.get('logLevel');
-const LOG_DISABLED = config.get('logDisabled');
+const NODE_ENV = config.get("env");
+const CORS_ORIGINS = config.get("cors.origins");
+const CORS_MAX_AGE = config.get("cors.maxAge");
+const LOG_LEVEL = config.get("logLevel");
+const LOG_DISABLED = config.get("logDisabled");
 
-initializeLogger({
-  level: LOG_LEVEL,
-  disabled: LOG_DISABLED,
-  defaultMeta: { env: NODE_ENV },
-});
+async function main() {
+  initializeLogger({
+    level: LOG_LEVEL,
+    disabled: LOG_DISABLED,
+    defaultMeta: { env: NODE_ENV },
+  });
 
-const app = new Koa();
+  await initializeData();
 
-// Add CORS
-app.use(
-  koaCors({
-    origin: (ctx) => {
-      if (CORS_ORIGINS.includes(ctx.request.header.origin)) {
-        return ctx.request.header.origin;
-      }
-      return CORS_ORIGINS[0];
-    },
-    allowHeaders: ['Accept', 'Content-Type', 'Authorization'],
-    maxAge: CORS_MAX_AGE,
-  })
-);
+  const app = new Koa();
 
-const logger = getLogger();
+  // Add CORS
+  app.use(
+    koaCors({
+      origin: (ctx) => {
+        if (CORS_ORIGINS.includes(ctx.request.header.origin)) {
+          return ctx.request.header.origin;
+        }
+        return CORS_ORIGINS[0];
+      },
+      allowHeaders: ["Accept", "Content-Type", "Authorization"],
+      maxAge: CORS_MAX_AGE,
+    })
+  );
 
-app.use(bodyParser());
+  const logger = getLogger();
 
-installRest(app);
+  app.use(bodyParser());
 
-app.listen(9000);
-logger.info('🚀 Server listening on http://localhost:9000');
+  installRest(app);
+
+  app.listen(9000);
+  logger.info("🚀 Server listening on http://localhost:9000");
+}
+
+// Wrap inside a main function as top level await is not supported in all NodeJS versions
+main();
