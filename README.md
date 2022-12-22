@@ -1,7 +1,5 @@
 # Examenopdracht Web Services
 
-> Schrap hierboven wat niet past
-
 - Student: Lars Salembier
 - Studentennummer: 202293794
 - E-mailadres: lars.salembier@student.hogent.be

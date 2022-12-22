@@ -1,5 +1,5 @@
-const Router = require('@koa/router');
-const healthService = require('../service/health');
+const Router = require("@koa/router");
+const healthService = require("../service/health");
 
 const ping = async (ctx) => {
   ctx.body = healthService.ping();
@@ -7,23 +7,20 @@ const ping = async (ctx) => {
 
 const getVersion = async (ctx) => {
   ctx.body = healthService.getVersion();
-}
+};
 
 /**
  * Install health routes on the given router.
- * 
+ *
  * @param {Router} app The parent router.
  */
 module.exports = (app) => {
   const router = new Router({
-    prefix: '/health'
+    prefix: "/health",
   });
 
-  router.get('/ping', ping);
-  router.get('/version', getVersion);
+  router.get("/ping", ping);
+  router.get("/version", getVersion);
 
-  app
-    .use(router.routes())
-    .use(router.allowedMethods());
+  app.use(router.routes()).use(router.allowedMethods());
 };
-
