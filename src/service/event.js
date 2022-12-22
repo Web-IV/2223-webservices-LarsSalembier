@@ -1,5 +1,5 @@
 const { getLogger } = require('../utils/logger');
-const { EVENTS, ADDRESSES } = require('../data/mock-data');
+const { EVENTS, ADDRESSES, YEARS } = require('../data/mock-data');
 
 const debugLog = (message, meta = {}) => {
   if (!this.logger) this.logger = getLogger();
@@ -16,31 +16,38 @@ const getById = (id) => {
   return EVENTS.find(event => event.id === id);
 }
 
-const create = ({ name, description, addressId, startDateTime, endDateTime, targetAudience }) => {
-  if (!name || !startDateTime) {
+const create = ({ name, description, addressId, startDateTime, endDateTime, targetAudience, yearId }) => {
+  if (!name || !startDateTime || !yearId) {
     throw new Error('Missing required fields');
   }
-  const existingAddress = ADDRESSES.find(address => address.id === addressId);
-  if (!existingAddress) {
-    throw new Error(`Address with id ${addressId} not found`);
+  if (addressId) {
+    const existingAddress = ADDRESSES.find(address => address.id === addressId);
+    if (!existingAddress) {
+      throw new Error(`Address with id ${addressId} not found`);
+    }
+  }
+  const existingYear = YEARS.find(year => year.id === yearId);
+  if (!existingYear) {
+    throw new Error(`Year with id ${yearId} not found`);
   }
   const maxId = Math.max(...EVENTS.map(event => event.id));
   const newEvent = {
     id: maxId + 1,
     name,
     description,
-    address: existingAddress,
+    address: addressId ? ADDRESSES.find(address => address.id === addressId) : null,
     startDateTime: new Date(startDateTime),
     endDateTime: endDateTime ? new Date(endDateTime) : null,
-    targetAudience
+    targetAudience,
+    year: existingYear
   };
   debugLog(`Creating event with name ${name} and description ${description}`);
   EVENTS.push(newEvent);
   return newEvent;
 }
 
-const updateById = (id, { name, description, addressId, startDateTime, endDateTime, targetAudience }) => {
-  if (!name || !startDateTime) {
+const updateById = (id, { name, description, addressId, startDateTime, endDateTime, targetAudience, yearId }) => {
+  if (!name || !startDateTime || !yearId) {
     throw new Error('Missing required fields');
   }
   debugLog(`Updating event with id ${id} to name ${name} and description ${description}`);
@@ -49,6 +56,10 @@ const updateById = (id, { name, description, addressId, startDateTime, endDateTi
     if (!existingAddress) {
       throw new Error(`Address with id ${addressId} not found`);
     }
+  }
+  const existingYear = YEARS.find(year => year.id === yearId);
+  if (!existingYear) {
+    throw new Error(`Year with id ${yearId} not found`);
   }
   
   const event = getById(id);
@@ -61,6 +72,7 @@ const updateById = (id, { name, description, addressId, startDateTime, endDateTi
   event.startDateTime = new Date(startDateTime);
   event.endDateTime = endDateTime ? new Date(endDateTime) : null;
   event.targetAudience = targetAudience;
+  event.year = existingYear;
   return event;
 }
 

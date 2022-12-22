@@ -13,11 +13,7 @@ const createYear = async (ctx) => {
   ctx.body = yearService.create({
     ...ctx.request.body,
     startDate: new Date(ctx.request.body.startDate),
-    endDate: ctx.request.body.endDate ? new Date(ctx.request.body.endDate) : null,
-    eventIds: ctx.request.body.eventIds ? ctx.request.body.eventIds.map(id => Number(id)) : [],
-    leaderIds: ctx.request.body.leaderIds ? ctx.request.body.leaderIds.map(id => Number(id)) : [],
-    headLeaderIds: ctx.request.body.headLeaderIds ? ctx.request.body.headLeaderIds.map(id => Number(id)) : [],
-    adultLeaderIds: ctx.request.body.adultLeaderIds ? ctx.request.body.adultLeaderIds.map(id => Number(id)) : [],
+    endDate: new Date(ctx.request.body.endDate),
   });
 }
 
@@ -25,11 +21,7 @@ const updateYear = async (ctx) => {
   ctx.body = yearService.updateById(ctx.params.id, {
     ...ctx.request.body,
     startDate: new Date(ctx.request.body.startDate),
-    endDate: ctx.request.body.endDate ? new Date(ctx.request.body.endDate) : null,
-    eventIds: ctx.request.body.eventIds ? ctx.request.body.eventIds.map(id => Number(id)) : [],
-    leaderIds: ctx.request.body.leaderIds ? ctx.request.body.leaderIds.map(id => Number(id)) : [],
-    headLeaderIds: ctx.request.body.headLeaderIds ? ctx.request.body.headLeaderIds.map(id => Number(id)) : [],
-    adultLeaderIds: ctx.request.body.adultLeaderIds ? ctx.request.body.adultLeaderIds.map(id => Number(id)) : [],
+    endDate: new Date(ctx.request.body.endDate),
   });
 }
 

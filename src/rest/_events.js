@@ -15,6 +15,7 @@ const createEvent = async (ctx) => {
     addressId: Number(ctx.request.body.addressId),
     startDateTime: Date(ctx.request.body.startDateTime),
     endDateTime: ctx.request.body.endDateTime ? Date(ctx.request.body.endDateTime) : null,
+    yearId: Number(ctx.request.body.yearId),
   });
 }
 
@@ -24,6 +25,7 @@ const updateEvent = async (ctx) => {
     addressId: Number(ctx.request.body.addressId),
     startDateTime: Date(ctx.request.body.startDateTime),
     endDateTime: ctx.request.body.endDateTime ? Date(ctx.request.body.endDateTime) : null,
+    yearId: Number(ctx.request.body.yearId),
   });
 }
 

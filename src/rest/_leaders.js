@@ -12,14 +12,16 @@ const getLeaderById = async (ctx) => {
 const createLeader = async (ctx) => {
   ctx.body = leaderService.create({
     personId: Number(ctx.request.body.personId),
-    groupId: Number(ctx.request.body.groupId)
+    groupId: Number(ctx.request.body.groupId),
+    yearId: Number(ctx.request.body.yearId),
   });
 }
 
 const updateLeaderById = async (ctx) => {
   ctx.body = leaderService.updateById(ctx.params.id, {
     personId: Number(ctx.request.body.personId),
-    groupId: Number(ctx.request.body.groupId)
+    groupId: Number(ctx.request.body.groupId),
+    yearId: Number(ctx.request.body.yearId),
   });
 }
 

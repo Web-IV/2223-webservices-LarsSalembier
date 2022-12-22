@@ -18,6 +18,25 @@ Persoon +--* Adres
 *id
 +persoon_id
 +afdeling_id
++werkjaar_id
+
+Leiding 1--? Werkjaar
+
+[Hoofdleiding]
+*id
++persoon_id
++werkjaar_id
+
+Persoon 1--? Hoofdleiding
+Hoofdleiding *--1 Werkjaar
+
+[VolwassenBegeleider]
+*id
++persoon_id
++werkjaar_id
+
+Persoon 1--? VolwassenBegeleider
+VolwassenBegeleider *--1 Werkjaar
 
 Persoon 1--? Leiding
 Leiding *--? Afdeling
@@ -44,15 +63,9 @@ datumEnTijdStart
 datumEnTijdEinde {label: "optioneel"}
 + werkjaar_id
 
+Evenement 1--* Werkjaar
+
 [Werkjaar]
 +id
 startDatum
 eindDatum {label: "optioneel"}
-+evenement_id
-+leiding_id
-+hoofdleiding
-+volwassenBegeleider
-
-Werkjaar 1--* Evenement
-Werkjaar 1--+ Leiding
-Werkjaar 1--+ Persoon
