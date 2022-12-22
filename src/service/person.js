@@ -1,27 +1,14 @@
 const { getLogger } = require('../core/logging');
-
-let PEOPLE = [
-  {
-    id: 1,
-    firstName: 'John',
-    lastName: 'Smith',
-    cellphone: '1234567890'
-  }, {
-    id: 2,
-    firstName: 'Jane',
-    lastName: 'Doe',
-    cellphone: '0987654321'
-  }
-];
+let { PEOPLE, ADDRESSES } = require('../data/mock-data');
 
 const debugLog = (message, meta = {}) => {
-  const logger = getLogger();
-  logger.debug(message, meta);
+  if (!this.logger) this.logger = getLogger();
+  this.logger.debug(message, meta);
 }
 
 const getAll = () => {
   debugLog('Fetching all people');
-  return PEOPLE;
+  return { items: PEOPLE, count: PEOPLE.length};
 }
 
 const getById = (id) => {
@@ -29,16 +16,33 @@ const getById = (id) => {
   return PEOPLE.find(person => person.id === id);
 }
 
-const create = ({ firstName, lastName, cellphone }) => {
+const create = ({ firstName, lastName, cellphone, addressId }) => {
+  if (addressId) {
+    const existingAddress = ADDRESSES.find(address => address.id === addressId);
+    if (!existingAddress) {
+      throw new Error(`Address with id ${addressId} not found`);
+    }
+  }
+
   const maxId = Math.max(...PEOPLE.map(person => person.id));
-  const newPerson = { id: maxId + 1, firstName, lastName, cellphone };
-  debugLog(`Creating person with firstName ${firstName}, lastName ${lastName}, cellphone ${cellphone}`);
+  const newPerson = {
+    id: maxId + 1, firstName, lastName, cellphone,
+    address: addressId ? ADDRESSES.find(address => address.id === addressId) : null
+  };
+  debugLog(`Creating person with firstName ${firstName}, lastName ${lastName}, cellphone ${cellphone} and addressId ${addressId}`);
   PEOPLE.push(newPerson);
   return newPerson;
 }
 
-const updateById = (id, { firstName, lastName, cellphone }) => {
-  debugLog(`Updating person with id ${id} to firstName ${firstName}, lastName ${lastName}, cellphone ${cellphone}`);
+const updateById = (id, { firstName, lastName, cellphone, placeId }) => {
+  debugLog(`Updating person with id ${id} to firstName ${firstName}, lastName ${lastName}, cellphone ${cellphone} and addressId ${addressId}`);
+  if (placeId) {
+    const existingAddress = ADDRESSES.find(address => address.id === addressId);
+    if (!existingAddress) {
+      throw new Error(`Address with id ${addressId} not found`);
+    }
+  }
+  
   const person = getById(id);
   if (!person) {
     throw new Error(`Person with id ${id} not found`);
@@ -46,6 +50,7 @@ const updateById = (id, { firstName, lastName, cellphone }) => {
   person.firstName = firstName;
   person.lastName = lastName;
   person.cellphone = cellphone;
+  person.address = addressId ? ADDRESSES.find(address => address.id === addressId) : null;
   return person;
 }
 
