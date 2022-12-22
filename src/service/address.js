@@ -1,61 +1,81 @@
 const { getLogger } = require("../core/logging");
-let { ADDRESSES } = require("../data/mock-data");
+const addressRepository = require("../repository/address");
 
 const debugLog = (message, meta = {}) => {
   if (!this.logger) this.logger = getLogger();
   this.logger.debug(message, meta);
 };
 
-const getAll = () => {
+/**
+ * Get all addresses
+ */
+const getAll = async () => {
   debugLog("Fetching all addresses");
-  return { items: ADDRESSES, count: ADDRESSES.length };
+  const items = await addressRepository.findAll();
+  const count = await addressRepository.findCount();
+  return { items, count };
 };
 
+/**
+ * Get address by id
+ *
+ * @param {number} id The id of the address to fetch
+ */
 const getById = (id) => {
   debugLog(`Fetching address with id ${id}`);
-  return ADDRESSES.find((address) => address.id === id);
+  return addressRepository.findById(id);
 };
 
-const create = ({ street, number, city, zipCode }) => {
-  if (!street || !number || !city || !zipCode) {
-    throw new Error("Missing required fields");
-  }
-  const maxId = Math.max(...ADDRESSES.map((address) => address.id));
-  const newAddress = {
-    id: maxId + 1,
+/**
+ * Create a new address
+ *
+ * @param {object} address The address to create
+ * @param {string} address.street The street of the address
+ * @param {string} address.number The number of the address
+ * @param {string} address.city The city of the address
+ * @param {number} address.zipCode The zipCode of the address
+ */
+const create = async ({ street, number, city, zipCode }) => {
+  const newPlace = {
     street,
     number,
     city,
     zipCode,
   };
-  debugLog(
-    `Creating address with street ${street}, number ${number}, city ${city} and zipCode ${zipCode}`
-  );
-  ADDRESSES.push(newAddress);
-  return newAddress;
+  debugLog("Created new address", newPlace);
+  const id = await addressRepository.create(newPlace);
+  return getById(id);
 };
 
-const updateById = (id, { street, number, city, zipCode }) => {
-  if (!street || !number || !city || !zipCode) {
-    throw new Error("Missing required fields");
-  }
-  debugLog(
-    `Updating address with id ${id} to street ${street}, number ${number}, city ${city} and zipCode ${zipCode}`
-  );
-  const address = getById(id);
-  if (!address) {
-    throw new Error(`Address with id ${id} not found`);
-  }
-  address.street = street;
-  address.number = number;
-  address.city = city;
-  address.zipCode = zipCode;
-  return address;
+/**
+ * Update an address
+ * @param {number} id The id of the address to update
+ * @param {object} address The address to update
+ * @param {string} address.street The street of the address
+ * @param {string} address.number The number of the address
+ * @param {string} address.city The city of the address
+ * @param {number} address.zipCode The zipCode of the address
+ */
+const updateById = async (id, { street, number, city, zipCode }) => {
+  const updatedAddress = {
+    street,
+    number,
+    city,
+    zipCode,
+  };
+  debugLog(`Updated address with id ${id}`, updatedAddress);
+  await addressRepository.updateById(id, updatedAddress);
+  return getById(id);
 };
 
-const deleteById = (id) => {
+/**
+ * Delete an address
+ *
+ * @param {number} id The id of the address to delete
+ */
+const deleteById = async (id) => {
   debugLog(`Deleting address with id ${id}`);
-  ADDRESSES = ADDRESSES.filter((address) => address.id !== id);
+  await addressRepository.deleteById(id);
 };
 
 module.exports = {
