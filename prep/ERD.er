@@ -9,131 +9,50 @@ telefoonnummer
 *id
 straat
 nummer
-bus {label: "optioneel"}
-+gemeenteNaam
-
-[Gemeente]
-*gemeenteNaam
+gemeente
 postcode
 
 Persoon +--* Adres
-Adres *--1 Gemeente
 
 [Leiding]
-+*persoon_id
-+afdeling_naam{label: "mut. excl. subafdeling_naam"}
-+subafdeling_naam{label: "mut. excl. afdeling_naam"}
-+werkjaar
-
-[Hoofdleiding]
-+*persoon_id
-specifiekeVerantwoordelijkheid {label: "optioneel"}
-+werkjaar
-
-Persoon 1--? Hoofdleiding
+*id
++persoon_id
++afdeling_id
 
 Persoon 1--? Leiding
 Leiding *--? Afdeling
-Leiding *--* Subafdeling
 
 [Afdeling]
-*naam
+*id'
+naam
 kleur
-+mascotte_naam {label: "optioneel"}
-leeftijden
-uitleg {label: "optioneel"}
+mascotte_naam {label: "optioneel"}
+doelgroep
 
-[Subafdeling]
-*naam
-+hoofdafdeling_naam
-geslacht {label: "optioneel"}
-uitleg {label: "optioneel"}
-
-Subafdeling *--1 Afdeling
-Afdeling *--1 Mascotte
-
-[Mascotte]
-*naam
-afbeeldingUrl
-uitleg {label: "optioneel"}
-
-[HomepageArticle]
+[Article]
 *id
 titel
 inhoud
-afbeeldingUrl
-
-[NewsPageArticle]
-*id
-titel
-inhoud
-publicatieDatum
-+redacteur_id {label: "optioneel"}
-afbeeldingOfVideoUrl {label: "optioneel"}
-
-[Redacteur]
-*+persoon_id
-
-NewsPageArticle +--* Redacteur
-Redacteur ?--1 Persoon
-
-[VolwassenBegeleider]
-+*persoon_id
-+werkjaar_id
-
-VolwassenBegeleider *--1 Persoon
-
-[Locatie]
-*id
-functie
-openingsuren {label: "optioneel"}
-+adres_id
-+verantwoordelijke_id {label: "optioneel"}
-
-[Verantwoordelijke]
-+*persoon_id
-
-Verantwoordelijke *--1 Persoon
-
-Locatie *--? Adres
-Locatie +--* Verantwoordelijke
 
 [Evenement]
 *id
 naam
-adres_id
++adres_id {label: "optioneel"}
 beschrijving {label: "optioneel"}
 voorWie {label: "optioneel"}
 datumEnTijdStart
 datumEnTijdEinde {label: "optioneel"}
-afbeeldingOfVideoUrl {label: "optioneel"}
-+verantwoordelijke_id {label: "optioneel"}
-
-Evenement *--* Verantwoordelijke
-
-[Kalender]
-*id
-+werkjaar_id
-+evenement_id
-
-Kalender 1--* Evenement
-
-[Fotos]
-*id
-+werkjaar_id
-googleFotosUrl
-+evenement_id {label: "optioneel"}
++ werkjaar_id
 
 [Werkjaar]
 +id
 startDatum
 eindDatum {label: "optioneel"}
++evenement_id
++leiding_id
++hoofdleiding
++volwassenBegeleider
 
-Fotos *--+ Evenement
-
-Werkjaar 1--* Fotos
-Werkjaar 1--1 Kalender
+Werkjaar 1--* Evenement
 Werkjaar 1--+ Leiding
-Hoofdleiding 1--+ Leiding
-Werkjaar 1--* Verantwoordelijke
-Werkjaar 1--1 VolwassenBegeleider
+Werkjaar 1--+ Persoon

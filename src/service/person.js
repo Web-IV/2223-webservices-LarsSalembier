@@ -17,6 +17,9 @@ const getById = (id) => {
 }
 
 const create = ({ firstName, lastName, cellphone, addressId }) => {
+  if (!firstName || !lastName || !cellphone) {
+    throw new Error('Missing required fields');
+  }
   if (addressId) {
     const existingAddress = ADDRESSES.find(address => address.id === addressId);
     if (!existingAddress) {
@@ -34,9 +37,12 @@ const create = ({ firstName, lastName, cellphone, addressId }) => {
   return newPerson;
 }
 
-const updateById = (id, { firstName, lastName, cellphone, placeId }) => {
+const updateById = (id, { firstName, lastName, cellphone, addressId }) => {
+  if (!firstName || !lastName || !cellphone) {
+    throw new Error('Missing required fields');
+  }
   debugLog(`Updating person with id ${id} to firstName ${firstName}, lastName ${lastName}, cellphone ${cellphone} and addressId ${addressId}`);
-  if (placeId) {
+  if (addressId) {
     const existingAddress = ADDRESSES.find(address => address.id === addressId);
     if (!existingAddress) {
       throw new Error(`Address with id ${addressId} not found`);

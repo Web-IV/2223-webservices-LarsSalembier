@@ -10,11 +10,17 @@ const getAddressById = async (ctx) => {
 }
 
 const createAddress = async (ctx) => {
-  ctx.body = addressService.create(ctx.request.body);
+  ctx.body = addressService.create({
+    ...ctx.request.body,
+    zipCode: Number(ctx.request.body.zipCode)
+  });
 }
 
 const updateAddressById = async (ctx) => {
-  ctx.body = addressService.updateById(ctx.params.id, ctx.request.body);
+  ctx.body = addressService.updateById(ctx.params.id, {
+    ...ctx.request.body,
+    zipCode: Number(ctx.request.body.zipCode)
+  });
 }
 
 const deleteAddressById = async (ctx) => {

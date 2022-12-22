@@ -17,6 +17,9 @@ const getById = (id) => {
 }
 
 const create = ({ street, number, city, zipCode }) => {
+  if (!street || !number || !city || !zipCode) {
+    throw new Error('Missing required fields');
+  }
   const maxId = Math.max(...ADDRESSES.map(address => address.id));
   const newAddress = {
     id: maxId + 1, street, number, city, zipCode
@@ -27,6 +30,9 @@ const create = ({ street, number, city, zipCode }) => {
 }
 
 const updateById = (id, { street, number, city, zipCode }) => {
+  if (!street || !number || !city || !zipCode) {
+    throw new Error('Missing required fields');
+  }
   debugLog(`Updating address with id ${id} to street ${street}, number ${number}, city ${city} and zipCode ${zipCode}`);
   const address = getById(id);
   if (!address) {

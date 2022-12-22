@@ -10,11 +10,17 @@ const getPersonById = async (ctx) => {
 }
 
 const createPerson = async (ctx) => {
-  ctx.body = personService.create(ctx.request.body);
+  ctx.body = personService.create({
+    ...ctx.request.body,
+    addressId: Number(ctx.request.body.addressId)
+  });
 }
 
 const updatePerson = async (ctx) => {
-  ctx.body = personService.updateById(ctx.params.id, ctx.request.body);
+  ctx.body = personService.updateById(ctx.params.id, {
+    ...ctx.request.body,
+    addressId: Number(ctx.request.body.addressId)
+  });
 }
 
 const deletePerson = async (ctx) => {
