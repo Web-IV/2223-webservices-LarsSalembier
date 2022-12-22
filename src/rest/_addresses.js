@@ -16,14 +16,14 @@ const createAddress = async (ctx) => {
   });
 };
 
-const updateAddressById = async (ctx) => {
+const updateAddress = async (ctx) => {
   ctx.body = await addressService.updateById(ctx.params.id, {
     ...ctx.request.body,
     zipCode: Number(ctx.request.body.zipCode),
   });
 };
 
-const deleteAddressById = async (ctx) => {
+const deleteAddress = async (ctx) => {
   await addressService.deleteById(ctx.params.id);
   ctx.status = 204;
 };
@@ -41,8 +41,8 @@ module.exports = (app) => {
   router.get("/", getAllAddresses);
   router.get("/:id", getAddressById);
   router.post("/", createAddress);
-  router.put("/:id", updateAddressById);
-  router.delete("/:id", deleteAddressById);
+  router.put("/:id", updateAddress);
+  router.delete("/:id", deleteAddress);
 
   app.use(router.routes()).use(router.allowedMethods());
 };
