@@ -6,7 +6,8 @@ let PEOPLE = [
     cellphone: '1234567890',
     address: {
       id: 1,
-      street: 'Dorpsstraat 1',
+      street: 'Dorpsstraat',
+      number: '1',
       city: 'Houthulst',
       zip: '8650'
     }
@@ -27,13 +28,15 @@ let PEOPLE = [
 let ADDRESSES = [
   {
     id: 1,
-    street: 'Dorpsstraat 1',
+    street: 'Dorpsstraat',
+    number: '1',
     city: 'Houthulst',
     zip: '8650'
   },
   {
     id: 2,
-    street: 'Dorpsstraat 2',
+    street: 'Stadenstraat',
+    number: '15b',
     city: 'Houthulst',
     zip: '8650'
   }
