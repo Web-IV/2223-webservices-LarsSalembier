@@ -24,9 +24,20 @@ router.get("/api/people", async (ctx) => {
 });
 
 router.post("/api/people", async (ctx) => {
-  logger.info(JSON.stringify(ctx.request));
-  const newPerson = personService.create(ctx.request.body);
-  ctx.body = newPerson;
+  ctx.body = personService.create(ctx.request.body);
+});
+
+router.get("/api/people/:id", async (ctx) => {
+  ctx.body = personService.getById(Number(ctx.params.id));
+});
+
+router.put("/api/people/:id", async (ctx) => {
+  ctx.body = personService.updateById(Number(ctx.params.id), ctx.request.body);
+});
+
+router.delete("/api/people/:id", async (ctx) => {
+  personService.deleteById(Number(ctx.params.id));
+  ctx.status = 204;
 });
 
 app

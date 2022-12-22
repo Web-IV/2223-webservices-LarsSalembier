@@ -14,24 +14,44 @@ let PEOPLE = [
   }
 ];
 
+const debugLog = (message, meta = {}) => {
+  const logger = getLogger();
+  logger.debug(message, meta);
+}
+
 const getAll = () => {
+  debugLog('Fetching all people');
   return PEOPLE;
 }
 
 const getById = (id) => {
-  throw new Error('Not implemented');
+  debugLog(`Fetching person with id ${id}`);
+  return PEOPLE.find(person => person.id === id);
 }
 
-const create = ({firstName, lastName, cellphone}) => {
-  throw new Error('Not implemented');
+const create = ({ firstName, lastName, cellphone }) => {
+  const maxId = Math.max(...PEOPLE.map(person => person.id));
+  const newPerson = { id: maxId + 1, firstName, lastName, cellphone };
+  debugLog(`Creating person with firstName ${firstName}, lastName ${lastName}, cellphone ${cellphone}`);
+  PEOPLE.push(newPerson);
+  return newPerson;
 }
 
-const updateById = (id) => {
-  throw new Error('Not implemented');
+const updateById = (id, { firstName, lastName, cellphone }) => {
+  debugLog(`Updating person with id ${id} to firstName ${firstName}, lastName ${lastName}, cellphone ${cellphone}`);
+  const person = getById(id);
+  if (!person) {
+    throw new Error(`Person with id ${id} not found`);
+  }
+  person.firstName = firstName;
+  person.lastName = lastName;
+  person.cellphone = cellphone;
+  return person;
 }
 
 const deleteById = (id) => {
-  throw new Error('Not implemented');
+  debugLog(`Deleting person with id ${id}`);
+  PEOPLE = PEOPLE.filter(person => person.id !== id);
 }
 
 module.exports = {
