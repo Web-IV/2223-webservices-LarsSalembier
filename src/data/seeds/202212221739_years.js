@@ -7,28 +7,28 @@ module.exports = {
       [
         {
           id: 1,
-          startDate: new Date(2019, 8, 1),
-          endDate: new Date(2020, 7, 31),
+          start_date: new Date(2019, 8, 1),
+          end_date: new Date(2020, 7, 31),
         },
         {
           id: 2,
-          startDate: new Date(2018, 0, 15),
-          endDate: new Date(2018, 11, 31),
+          start_date: new Date(2018, 0, 15),
+          end_date: new Date(2018, 11, 31),
         },
         {
           id: 3,
-          startDate: new Date(2020, 5, 1),
-          endDate: new Date(2021, 4, 30),
+          start_date: new Date(2020, 5, 1),
+          end_date: new Date(2021, 4, 30),
         },
         {
           id: 4,
-          startDate: new Date(2022, 2, 15),
-          endDate: new Date(2022, 5, 31),
+          start_date: new Date(2022, 2, 15),
+          end_date: new Date(2022, 5, 31),
         },
         {
           id: 5,
-          startDate: new Date(2023, 7, 1),
-          endDate: new Date(2024, 6, 31),
+          start_date: new Date(2023, 7, 1),
+          end_date: new Date(2024, 6, 31),
         },
       ],
     ]);

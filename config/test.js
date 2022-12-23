@@ -1,7 +1,7 @@
 module.exports = {
   log: {
-    level: "info",
-    disabled: false,
+    level: "silly",
+    disabled: true,
   },
   cors: {
     origins: ["http://localhost:3000"],
@@ -11,6 +11,6 @@ module.exports = {
     client: "mysql2",
     host: "localhost",
     port: 3306,
-    name: "chirosite",
+    name: "chirosite_test",
   },
 };

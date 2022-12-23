@@ -12,7 +12,5 @@ module.exports = {
     host: "localhost",
     port: 3306,
     name: "chirosite",
-    username: "root",
-    password: "root",
   },
 };
