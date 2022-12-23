@@ -1,4 +1,4 @@
-const { withServer } = require("../helpers/server");
+const { withServer } = require("../helpers");
 const { tables } = require("../../src/data");
 
 const data = {
