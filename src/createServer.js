@@ -3,17 +3,17 @@ const config = require("config");
 const koaCors = require("@koa/cors");
 const bodyParser = require("koa-bodyparser");
 const emoji = require("node-emoji");
-const { serializeError } = require("serialize-error");
 const { initializeLogger, getLogger } = require("./core/logging");
 const ServiceError = require("./core/ServiceError");
 const { initializeData, shutdownData } = require("./data");
+const { serializeError } = require("serialize-error");
 const installRest = require("./rest");
 
 const NODE_ENV = config.get("env");
 const CORS_ORIGINS = config.get("cors.origins");
 const CORS_MAX_AGE = config.get("cors.maxAge");
-const LOG_LEVEL = config.get("logLevel");
-const LOG_DISABLED = config.get("logDisabled");
+const LOG_LEVEL = config.get("log.level");
+const LOG_DISABLED = config.get("log.disabled");
 
 module.exports = async function createServer() {
   initializeLogger({

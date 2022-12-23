@@ -5,7 +5,7 @@ const installEventRouter = require("./_events");
 const installGroupRouter = require("./_groups");
 const installHealthRouter = require("./_health");
 const installLeaderRouter = require("./_leaders");
-const installPersonRouter = require("./_persons");
+const installPersonRouter = require("./_people");
 const installYearRouter = require("./_years");
 
 /**

@@ -1,5 +1,5 @@
 const { tables, getKnex } = require("../data/index");
-const { getLogger } = require("../core/logger");
+const { getLogger } = require("../core/logging");
 
 const SELECT_COLUMNS = [
   `${tables.event}.id`,
