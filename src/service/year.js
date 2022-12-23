@@ -32,8 +32,10 @@ const getAll = async () => {
 const getById = (id) => {
   debugLog(`Fetching year with id ${id}`);
   const year = yearRepository.findById(id);
+  year.start_date = new Date(year.start_date);
+  year.end_date = new Date(year.end_date);
   if (!year) {
-    throw new ServiceError.NotFound(`Year with id ${id} not found`, {id});
+    throw ServiceError.notFound(`Year with id ${id} not found`, {id});
   }
   return year;
 };
@@ -89,7 +91,7 @@ const deleteById = async (id) => {
   debugLog(`Deleting year with id ${id}`);
   const deleted = yearRepository.deleteById(id);
   if (!deleted) {
-    throw new ServiceError.NotFound(`Year with id ${id} not found`, {id});
+    throw ServiceError.notFound(`Year with id ${id} not found`, {id});
   }
 };
 
