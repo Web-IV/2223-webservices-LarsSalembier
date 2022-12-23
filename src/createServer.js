@@ -143,7 +143,7 @@ module.exports = async function createServer() {
       return new Promise((resolve) => {
         // To avoid EADDRINUSE error when running tests
         if (NODE_ENV !== 'test') {
-          const port = process.env.PORT || 9000;
+          const port = config.get(port);
           app.listen(port);
           logger.info(`🚀 Server listening on http://localhost:${port}`);
         }
