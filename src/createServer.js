@@ -2,7 +2,10 @@ const Koa = require("koa");
 const config = require("config");
 const koaCors = require("@koa/cors");
 const bodyParser = require("koa-bodyparser");
+const emoji = require("node-emoji");
+const { serializeError } = require("serialize-error");
 const { initializeLogger, getLogger } = require("./core/logging");
+const ServiceError = require("./core/ServiceError");
 const { initializeData, shutdownData } = require("./data");
 const installRest = require("./rest");
 
@@ -63,6 +66,53 @@ module.exports = async function createServer() {
       });
 
       throw error;
+    }
+  });
+
+  app.use(async (ctx, next) => {
+    try {
+      await next();
+
+      if (ctx.status === 404) {
+        ctx.body = {
+          code: "NOT_FOUND",
+          message: `Unknown resource: ${ctx.url}`,
+        };
+      }
+    } catch (error) {
+      const logger = getLogger();
+      logger.error("Error occured while handling a request", {
+        error: serializeError(error),
+      });
+
+      let statusCode = error.status || 500;
+      let errorBody = {
+        code: error.code || "INTERNAL_SERVER_ERROR",
+        message: error.message,
+        details: error.details || {},
+        stack: NODE_ENV !== "production" ? error.stack : undefined,
+      };
+
+      if (error instanceof ServiceError) {
+        if (error.isNotFound) {
+          statusCode = 404;
+        }
+
+        if (error.isValidationFailed) {
+          statusCode = 400;
+        }
+
+        if (error.isUnauthorized) {
+          statusCode = 401;
+        }
+
+        if (error.isForbidden) {
+          statusCode = 403;
+        }
+      }
+
+      ctx.status = statusCode;
+      ctx.body = errorBody;
     }
   });
 
