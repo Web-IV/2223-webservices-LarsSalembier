@@ -1,12 +1,25 @@
+const Joi = require("joi");
 const Router = require("@koa/router");
 const yearService = require("../service/year");
+const validate = require("./_validation");
 
 const getAllYears = async (ctx) => {
   ctx.body = await yearService.getAll();
 };
+getAllYears.validationScheme = {
+  query: Joi.object({
+    limit: Joi.number().positive().max(1000).optional(),
+    offset: Joi.number().min(0).optional(),
+  }).and("limit", "offset"),
+};
 
 const getYearById = async (ctx) => {
   ctx.body = await yearService.getById(ctx.params.id);
+};
+getYearById.validationScheme = {
+  params: {
+    id: Joi.number().integer().positive().required(),
+  },
 };
 
 const createYear = async (ctx) => {
@@ -16,6 +29,12 @@ const createYear = async (ctx) => {
     endDate: new Date(ctx.request.body.endDate),
   });
 };
+createYear.validationScheme = {
+  body: {
+    startDate: Joi.date().required(),
+    endDate: Joi.date().required(),
+  },
+};
 
 const updateYear = async (ctx) => {
   ctx.body = await yearService.updateById(ctx.params.id, {
@@ -24,10 +43,24 @@ const updateYear = async (ctx) => {
     endDate: new Date(ctx.request.body.endDate),
   });
 };
+updateYear.validationScheme = {
+  params: {
+    id: Joi.number().integer().positive().required(),
+  },
+  body: {
+    startDate: Joi.date().required(),
+    endDate: Joi.date().required(),
+  },
+};
 
 const deleteYear = async (ctx) => {
   await yearService.deleteById(ctx.params.id);
   ctx.status = 204;
+};
+deleteYear.validationScheme = {
+  params: {
+    id: Joi.number().integer().positive().required(),
+  },
 };
 
 /**
@@ -40,11 +73,11 @@ module.exports = (app) => {
     prefix: "/years",
   });
 
-  router.get("/", getAllYears);
-  router.get("/:id", getYearById);
-  router.post("/", createYear);
-  router.put("/:id", updateYear);
-  router.delete("/:id", deleteYear);
+  router.get("/", validate(getAllYears.validationScheme), getAllYears);
+  router.get("/:id", validate(getYearById.validationScheme), getYearById);
+  router.post("/", validate(createYear.validationScheme), createYear);
+  router.put("/:id", validate(updateYear.validationScheme), updateYear);
+  router.delete("/:id", validate(deleteYear.validationScheme), deleteYear);
 
   app.use(router.routes()).use(router.allowedMethods());
 };

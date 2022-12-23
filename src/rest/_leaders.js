@@ -1,12 +1,25 @@
+const Joi = require("joi");
 const Router = require("@koa/router");
 const leaderService = require("../service/leader");
+const validate = require("./_validation");
 
 const getAllLeaders = async (ctx) => {
   ctx.body = await leaderService.getAll();
 };
+getAllLeaders.validationScheme = {
+  query: Joi.object({
+    limit: Joi.number().positive().max(1000).optional(),
+    offset: Joi.number().min(0).optional(),
+  }).and("limit", "offset"),
+};
 
 const getLeaderById = async (ctx) => {
   ctx.body = await leaderService.getById(ctx.params.id);
+};
+getLeaderById.validationScheme = {
+  params: {
+    id: Joi.number().integer().positive().required(),
+  },
 };
 
 const createLeader = async (ctx) => {
@@ -16,6 +29,13 @@ const createLeader = async (ctx) => {
     yearId: Number(ctx.request.body.yearId),
   });
 };
+createLeader.validationScheme = {
+  body: {
+    personId: Joi.number().integer().positive().required(),
+    groupId: Joi.number().integer().positive().required(),
+    yearId: Joi.number().integer().positive().required(),
+  },
+};
 
 const updateLeaderById = async (ctx) => {
   ctx.body = await leaderService.updateById(ctx.params.id, {
@@ -24,10 +44,25 @@ const updateLeaderById = async (ctx) => {
     yearId: Number(ctx.request.body.yearId),
   });
 };
+updateLeaderById.validationScheme = {
+  params: {
+    id: Joi.number().integer().positive().required(),
+  },
+  body: {
+    personId: Joi.number().integer().positive().required(),
+    groupId: Joi.number().integer().positive().required(),
+    yearId: Joi.number().integer().positive().required(),
+  },
+};
 
 const deleteLeaderById = async (ctx) => {
   await leaderService.deleteById(ctx.params.id);
   ctx.status = 204;
+};
+deleteLeaderById.validationScheme = {
+  params: {
+    id: Joi.number().integer().positive().required(),
+  },
 };
 
 /**
@@ -40,11 +75,19 @@ module.exports = (app) => {
     prefix: "/leaders",
   });
 
-  router.get("/", getAllLeaders);
-  router.get("/:id", getLeaderById);
-  router.post("/", createLeader);
-  router.put("/:id", updateLeaderById);
-  router.delete("/:id", deleteLeaderById);
+  router.get("/", validate(getAllLeaders.validationScheme), getAllLeaders);
+  router.get("/:id", validate(getLeaderById.validationScheme), getLeaderById);
+  router.post("/", validate(createLeader.validationScheme), createLeader);
+  router.put(
+    "/:id",
+    validate(updateLeaderById.validationScheme),
+    updateLeaderById
+  );
+  router.delete(
+    "/:id",
+    validate(deleteLeaderById.validationScheme),
+    deleteLeaderById
+  );
 
   app.use(router.routes()).use(router.allowedMethods());
 };
