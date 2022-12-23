@@ -22,22 +22,6 @@ Persoon +--* Adres
 
 Leiding 1--? Werkjaar
 
-[Hoofdleiding]
-*id
-+persoon_id
-+werkjaar_id
-
-Persoon 1--? Hoofdleiding
-Hoofdleiding *--1 Werkjaar
-
-[VolwassenBegeleider]
-*id
-+persoon_id
-+werkjaar_id
-
-Persoon 1--? VolwassenBegeleider
-VolwassenBegeleider *--1 Werkjaar
-
 Persoon 1--? Leiding
 Leiding *--? Afdeling
 

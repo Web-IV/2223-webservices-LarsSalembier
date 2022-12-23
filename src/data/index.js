@@ -136,7 +136,7 @@ const tables = {
   group: "groups",
   leader: "leaders",
   headLeader: "head_leaders",
-  groupLeader: "group_leaders",
+  adultLeader: "adult_leaders",
   person: "people",
   year: "years",
 };

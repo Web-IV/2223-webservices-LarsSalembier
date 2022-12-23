@@ -3,6 +3,8 @@ const { getLogger } = require("../core/logging");
 
 /**
  * Find all addresses
+ *
+ * @returns {Promise<Array>} list of addresses
  */
 const findAll = () => {
   return getKnex()(tables.address).select().orderBy("name", "ASC");
@@ -12,6 +14,8 @@ const findAll = () => {
  * Find address by id
  *
  * @param {number} id
+ *
+ * @returns {Promise<object>} the address
  */
 const findById = (id) => {
   return getKnex()(tables.address).select().where("id", id).first();
@@ -19,6 +23,8 @@ const findById = (id) => {
 
 /**
  * Calculate the total number of addresses
+ *
+ * @returns {Promise<number>} the total number of addresses
  */
 const findCount = async () => {
   const [count] = await getKnex()(tables.place).count();

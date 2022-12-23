@@ -1,88 +1,80 @@
 const { getLogger } = require("../core/logging");
-let { LEADERS, GROUPS, PEOPLE, YEARS } = require("../data/mock-data");
+const leaderRepository = require("../repository/leader");
 
 const debugLog = (message, meta = {}) => {
   if (!this.logger) this.logger = getLogger();
   this.logger.debug(message, meta);
 };
 
-const getAll = () => {
+/**
+ * Get all leaders
+ *
+ * @returns {Promise<{items: Array, count: number}>} list of leaders and total count
+ */
+const getAll = async () => {
   debugLog("Fetching all leaders");
-  return { items: LEADERS, count: LEADERS.length };
+  const items = await leaderRepository.findAll();
+  const count = await leaderRepository.findCount();
+  return { items, count };
 };
 
-const getById = (id) => {
+/**
+ * Get leader by id
+ *
+ * @param {number} id the id of the leader
+ *
+ * @returns {Promise<object>} the leader
+ */
+const getById = async (id) => {
   debugLog(`Fetching leader with id ${id}`);
-  return LEADERS.find((leader) => leader.id === id);
-};
-
-const create = ({ personId, groupId, yearId }) => {
-  if (!personId || !groupId || !yearId) {
-    throw new Error("Missing required fields");
-  }
-  const existingPerson = PEOPLE.find((person) => person.id === personId);
-  if (!existingPerson) {
-    throw new Error(`Person with id ${personId} not found`);
-  }
-
-  const existingGroup = GROUPS.find((group) => group.id === groupId);
-  if (!existingGroup) {
-    throw new Error(`Group with id ${groupId} not found`);
-  }
-
-  const existingYear = YEARS.find((year) => year.id === yearId);
-  if (!existingYear) {
-    throw new Error(`Year with id ${yearId} not found`);
-  }
-
-  const maxId = Math.max(...LEADERS.map((leader) => leader.id));
-  const newLeader = {
-    id: maxId + 1,
-    person: existingPerson,
-    group: existingGroup,
-    year: existingYear,
-  };
-  debugLog(`Creating leader with personId ${personId} and groupId ${groupId}`);
-  LEADERS.push(newLeader);
-  return newLeader;
-};
-
-const updateById = (id, { personId, groupId, yearId }) => {
-  if (!personId || !groupId || !yearId) {
-    throw new Error("Missing required fields");
-  }
-  debugLog(
-    `Updating leader with id ${id} to personId ${personId} and groupId ${groupId}`
-  );
-  const existingPerson = PEOPLE.find((person) => person.id === personId);
-  if (!existingPerson) {
-    throw new Error(`Person with id ${personId} not found`);
-  }
-
-  const existingGroup = GROUPS.find((group) => group.id === groupId);
-  if (!existingGroup) {
-    throw new Error(`Group with id ${groupId} not found`);
-  }
-
-  const existingYear = YEARS.find((year) => year.id === yearId);
-  if (!existingYear) {
-    throw new Error(`Year with id ${yearId} not found`);
-  }
-
-  const leader = LEADERS.find((leader) => leader.id === id);
+  const leader = await leaderRepository.findById(id);
   if (!leader) {
     throw new Error(`Leader with id ${id} not found`);
   }
-
-  leader.person = existingPerson;
-  leader.group = existingGroup;
-  leader.year = existingYear;
   return leader;
 };
 
-const deleteById = (id) => {
+/**
+ * Create a new leader
+ *
+ * @param {object} leader The leader to create
+ * @param {number} leader.personId The id of the person of the leader
+ * @param {number} leader.groupId The id of the group of the leader
+ * @param {number} leader.yearId The id of the year of the leader
+ *
+ * @returns {Promise<object>} the created leader
+ */
+const create = async (leader) => {
+  debugLog("Creating new leader", leader);
+  const id = await leaderRepository.create(leader);
+  return getById(id);
+};
+
+/**
+ * Update a leader by id
+ *
+ * @param {number} id The id of the leader to update
+ * @param {object} leader The leader to update
+ * @param {number} leader.personId The id of the person of the leader
+ * @param {number} leader.groupId The id of the group of the leader
+ * @param {number} leader.yearId The id of the year of the leader
+ *
+ * @returns {Promise<object>} the updated leader
+ */
+const updateById = async (id, updatedLeaderData) => {
+  debugLog(`Updating leader with id ${id}`, updatedLeaderData);
+  await leaderRepository.updateById(id, updatedLeaderData);
+  return getById(id);
+};
+
+/**
+ * Delete a leader by id
+ *
+ * @param {number} id The id of the leader to delete
+ */
+const deleteById = async (id) => {
   debugLog(`Deleting leader with id ${id}`);
-  LEADERS = LEADERS.filter((leader) => leader.id !== id);
+  await leaderRepository.deleteById(id);
 };
 
 module.exports = {

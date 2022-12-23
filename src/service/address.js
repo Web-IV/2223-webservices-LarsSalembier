@@ -8,6 +8,8 @@ const debugLog = (message, meta = {}) => {
 
 /**
  * Get all addresses
+ *
+ * @returns {Promise<{items: Array, count: number}>} list of addresses and total count
  */
 const getAll = async () => {
   debugLog("Fetching all addresses");
@@ -20,6 +22,8 @@ const getAll = async () => {
  * Get address by id
  *
  * @param {number} id The id of the address to fetch
+ *
+ * @returns {Promise<object>} the address
  */
 const getById = (id) => {
   debugLog(`Fetching address with id ${id}`);
@@ -34,6 +38,8 @@ const getById = (id) => {
  * @param {string} address.number The number of the address
  * @param {string} address.city The city of the address
  * @param {number} address.zipCode The zipCode of the address
+ *
+ * @returns {Promise<object>} the newly created address
  */
 const create = async ({ street, number, city, zipCode }) => {
   const newPlace = {
@@ -55,6 +61,8 @@ const create = async ({ street, number, city, zipCode }) => {
  * @param {string} address.number The number of the address
  * @param {string} address.city The city of the address
  * @param {number} address.zipCode The zipCode of the address
+ *
+ * @returns {Promise<object>} the updated address
  */
 const updateById = async (id, { street, number, city, zipCode }) => {
   const updatedAddress = {

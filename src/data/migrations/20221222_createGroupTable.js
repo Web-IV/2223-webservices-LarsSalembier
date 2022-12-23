@@ -6,8 +6,8 @@ module.exports = {
       table.increments("id").primary();
       table.string("name", 255).notNullable();
       table.string("color", 255).notNullable();
-      table.string("mascotName", 255);
-      table.string("targetAudience", 255).notNullable();
+      table.string("mascot_name", 255);
+      table.string("target_audience", 255).notNullable();
     });
   },
   down: async (knex) => {

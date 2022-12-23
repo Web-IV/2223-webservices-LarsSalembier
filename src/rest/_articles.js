@@ -2,23 +2,23 @@ const Router = require("@koa/router");
 const articleService = require("../service/article");
 
 const getAllArticles = async (ctx) => {
-  ctx.body = articleService.getAll();
+  ctx.body = await articleService.getAll();
 };
 
 const getArticleById = async (ctx) => {
-  ctx.body = articleService.getById(ctx.params.id);
+  ctx.body = await articleService.getById(ctx.params.id);
 };
 
 const createArticle = async (ctx) => {
-  ctx.body = articleService.create(ctx.request.body);
+  ctx.body = await articleService.create(ctx.request.body);
 };
 
-const updateArticleById = async (ctx) => {
-  ctx.body = articleService.updateById(ctx.params.id, ctx.request.body);
+const updateArticle = async (ctx) => {
+  ctx.body = await articleService.updateById(ctx.params.id, ctx.request.body);
 };
 
-const deleteArticleById = async (ctx) => {
-  articleService.deleteById(ctx.params.id);
+const deleteArticle = async (ctx) => {
+  await articleService.deleteById(ctx.params.id);
   ctx.status = 204;
 };
 
@@ -35,8 +35,8 @@ module.exports = (app) => {
   router.get("/", getAllArticles);
   router.get("/:id", getArticleById);
   router.post("/", createArticle);
-  router.put("/:id", updateArticleById);
-  router.delete("/:id", deleteArticleById);
+  router.put("/:id", updateArticle);
+  router.delete("/:id", deleteArticle);
 
   app.use(router.routes()).use(router.allowedMethods());
 };

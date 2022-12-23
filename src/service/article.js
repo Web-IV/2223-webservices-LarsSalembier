@@ -1,55 +1,78 @@
-const { getLogger } = require("../utils/logger");
-const { ARTICLES } = require("../data/mock-data");
+const { getLogger } = require("../core/logging");
+const articleRepository = require("../repository/article");
 
 const debugLog = (message, meta = {}) => {
   if (!this.logger) this.logger = getLogger();
   this.logger.debug(message, meta);
 };
 
-const getAll = () => {
+/**
+ * Get all articles
+ *
+ * @returns {Promise<{items: Array, count: number}>} list of articles and total count
+ */
+const getAll = async () => {
   debugLog("Fetching all articles");
-  return { items: ARTICLES, count: ARTICLES.length };
+  const items = await articleRepository.findAll();
+  const count = await articleRepository.findCount();
+  return { items, count };
 };
 
+/**
+ * Get article by id
+ *
+ * @param {number} id the id of the article
+ *
+ * @returns {Promise<object>} the article
+ */
 const getById = (id) => {
   debugLog(`Fetching article with id ${id}`);
-  return ARTICLES.find((article) => article.id === id);
+  return articleRepository.findById(id);
 };
 
-const create = ({ title, content }) => {
-  if (!title || !content) {
-    throw new Error("Missing required fields");
-  }
-  const maxId = Math.max(...ARTICLES.map((article) => article.id));
-  const newArticle = {
-    id: maxId + 1,
-    title,
-    content,
-  };
-  debugLog(`Creating article with title ${title} and content ${content}`);
-  ARTICLES.push(newArticle);
-  return newArticle;
+/**
+ * Create a new article
+ *
+ * @param {object} article The article to create
+ * @param {string} article.title The title of the article
+ * @param {string} article.content The content of the article
+ *
+ * @returns {Promise<object>} the newly created article
+ */
+const create = async ({ title, content }) => {
+  const newArticle = { title, content };
+  debugLog(`Creating new article with title ${title} and content ${content}`);
+  const id = await articleRepository.create(newArticle);
+  return getById(id);
 };
 
-const updateById = (id, { title, content }) => {
+/**
+ * Update an article by id
+ *
+ * @param {number} id the id of the article
+ * @param {object} article the article to update
+ * @param {string} article.title the title of the article
+ * @param {string} article.content the content of the article
+ *
+ * @returns {Promise<object>} the updated article
+ */
+const updateById = async (id, { title, content }) => {
+  const updatedArticle = { title, content };
   debugLog(
-    `Updating article with id ${id} to title ${title} and content ${content}`
+    `Updating article with id ${id} with title ${title} and content ${content}`
   );
-  if (!title || !content) {
-    throw new Error("Missing required fields");
-  }
-  const article = getById(id);
-  if (!article) {
-    throw new Error(`Article with id ${id} not found`);
-  }
-  article.title = title;
-  article.content = content;
-  return article;
+  await articleRepository.updateById(id, updatedArticle);
+  return getById(id);
 };
 
-const deleteById = (id) => {
+/**
+ * Delete an article by id
+ *
+ * @param {number} id the id of the article
+ */
+const deleteById = async (id) => {
   debugLog(`Deleting article with id ${id}`);
-  ARTICLES = ARTICLES.filter((article) => article.id !== id);
+  await articleRepository.deleteById(id);
 };
 
 module.exports = {

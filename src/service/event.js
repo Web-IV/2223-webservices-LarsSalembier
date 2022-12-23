@@ -1,113 +1,88 @@
-const { getLogger } = require("../utils/logger");
-const { EVENTS, ADDRESSES, YEARS } = require("../data/mock-data");
+const { getLogger } = require("../core/logging");
+const eventRepository = require("../repository/event");
 
 const debugLog = (message, meta = {}) => {
   if (!this.logger) this.logger = getLogger();
   this.logger.debug(message, meta);
 };
 
-const getAll = () => {
+/**
+ * Get all events
+ *
+ * @returns {Promise<{items: Array, count: number}>} list of events and total count
+ */
+const getAll = async () => {
   debugLog("Fetching all events");
-  return { items: EVENTS, count: EVENTS.length };
+  const items = await eventRepository.findAll();
+  const count = await eventRepository.findCount();
+  return { items, count };
 };
 
-const getById = (id) => {
+/**
+ * Get event by id
+ *
+ * @param {number} id the id of the event
+ *
+ * @returns {Promise<object>} the event
+ */
+const getById = async (id) => {
   debugLog(`Fetching event with id ${id}`);
-  return EVENTS.find((event) => event.id === id);
-};
-
-const create = ({
-  name,
-  description,
-  addressId,
-  startDateTime,
-  endDateTime,
-  targetAudience,
-  yearId,
-}) => {
-  if (!name || !startDateTime || !yearId) {
-    throw new Error("Missing required fields");
-  }
-  if (addressId) {
-    const existingAddress = ADDRESSES.find(
-      (address) => address.id === addressId
-    );
-    if (!existingAddress) {
-      throw new Error(`Address with id ${addressId} not found`);
-    }
-  }
-  const existingYear = YEARS.find((year) => year.id === yearId);
-  if (!existingYear) {
-    throw new Error(`Year with id ${yearId} not found`);
-  }
-  const maxId = Math.max(...EVENTS.map((event) => event.id));
-  const newEvent = {
-    id: maxId + 1,
-    name,
-    description,
-    address: addressId
-      ? ADDRESSES.find((address) => address.id === addressId)
-      : null,
-    startDateTime: new Date(startDateTime),
-    endDateTime: endDateTime ? new Date(endDateTime) : null,
-    targetAudience,
-    year: existingYear,
-  };
-  debugLog(`Creating event with name ${name} and description ${description}`);
-  EVENTS.push(newEvent);
-  return newEvent;
-};
-
-const updateById = (
-  id,
-  {
-    name,
-    description,
-    addressId,
-    startDateTime,
-    endDateTime,
-    targetAudience,
-    yearId,
-  }
-) => {
-  if (!name || !startDateTime || !yearId) {
-    throw new Error("Missing required fields");
-  }
-  debugLog(
-    `Updating event with id ${id} to name ${name} and description ${description}`
-  );
-  if (addressId) {
-    const existingAddress = ADDRESSES.find(
-      (address) => address.id === addressId
-    );
-    if (!existingAddress) {
-      throw new Error(`Address with id ${addressId} not found`);
-    }
-  }
-  const existingYear = YEARS.find((year) => year.id === yearId);
-  if (!existingYear) {
-    throw new Error(`Year with id ${yearId} not found`);
-  }
-
-  const event = getById(id);
+  const event = await eventRepository.findById(id);
   if (!event) {
     throw new Error(`Event with id ${id} not found`);
   }
-  event.name = name;
-  event.description = description;
-  event.address = addressId
-    ? ADDRESSES.find((address) => address.id === addressId)
-    : null;
-  event.startDateTime = new Date(startDateTime);
-  event.endDateTime = endDateTime ? new Date(endDateTime) : null;
-  event.targetAudience = targetAudience;
-  event.year = existingYear;
   return event;
 };
 
-const deleteById = (id) => {
+/**
+ * Create a new event
+ *
+ * @param {object} event The event to create
+ * @param {string} event.name The name of the event
+ * @param {string} event.description The description of the event
+ * @param {number} event.addressId The id of the address of the event
+ * @param {string} event.startDateTime The start date and time of the event
+ * @param {string} event.endDateTime The end date and time of the event
+ * @param {string} event.targetAudience The target audience of the event
+ * @param {number} event.yearId The id of the year of the event
+ *
+ * @returns {Promise<object>} the created event
+ */
+const create = async (event) => {
+  debugLog("Creating new event", event);
+  const id = await eventRepository.create(event);
+  return getById(id);
+};
+
+/**
+ * Update an event by id
+ *
+ * @param {number} id The id of the event to update
+ * @param {object} event The event to update
+ * @param {string} event.name The name of the event
+ * @param {string} event.description The description of the event
+ * @param {number} event.addressId The id of the address of the event
+ * @param {string} event.startDateTime The start date and time of the event
+ * @param {string} event.endDateTime The end date and time of the event
+ * @param {string} event.targetAudience The target audience of the event
+ * @param {number} event.yearId The id of the year of the event
+ *
+ * @returns {Promise<object>} the updated event
+ */
+const updateById = async (id, updatedEventData) => {
+  debugLog(`Updating event with id ${id}`, updatedEventData);
+  await eventRepository.updateById(id, updatedEventData);
+  return getById(id);
+};
+
+/**
+ * Delete an event by id
+ *
+ * @param {number} id The id of the event to delete
+ */
+const deleteById = async (id) => {
   debugLog(`Deleting event with id ${id}`);
-  EVENTS = EVENTS.filter((event) => event.id !== id);
+  await eventRepository.deleteById(id);
 };
 
 module.exports = {

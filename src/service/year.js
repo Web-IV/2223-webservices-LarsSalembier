@@ -1,56 +1,80 @@
-const { getLogger } = require("../utils/logger");
-const { YEARS, PEOPLE, LEADERS, EVENTS } = require("../data/mock-data");
+const { getLogger } = require("../core/logging");
+const yearRepository = require("../repository/year");
 
 const debugLog = (message, meta = {}) => {
   if (!this.logger) this.logger = getLogger();
   this.logger.debug(message, meta);
 };
 
-const getAll = () => {
+/**
+ * Get all years
+ *
+ * @returns {Promise<{items: Array, count: number}>} list of years and total count
+ */
+const getAll = async () => {
   debugLog("Fetching all years");
-  return { items: YEARS, count: YEARS.length };
+  const items = await yearRepository.findAll();
+  const count = await yearRepository.findCount();
+  return { items, count };
 };
 
+/**
+ * Get year by id
+ *
+ * @param {number} id the id of the year
+ *
+ * @returns {Promise<object>} the year
+ */
 const getById = (id) => {
   debugLog(`Fetching year with id ${id}`);
-  return YEARS.find((year) => year.id === id);
+  return yearRepository.findById(id);
 };
 
-const create = ({ startDate, endDate }) => {
-  if (!startDate || !endDate) {
-    throw new Error("Missing required fields");
-  }
-
-  const maxId = Math.max(...YEARS.map((year) => year.id));
-  const newYear = {
-    id: maxId + 1,
-    startDate: new Date(startDate),
-    endDate: new Date(endDate),
-  };
-  debugLog(`Creating year with startDate ${startDate} and endDate ${endDate}`);
-  YEARS.push(newYear);
-  return newYear;
-};
-
-const updateById = (id, { startDate, endDate }) => {
-  if (!startDate || !endDate) {
-    throw new Error("Missing required fields");
-  }
+/**
+ * Create a new year
+ *
+ * @param {object} year The year to create
+ * @param {string} year.startDate The start date of the year
+ * @param {string} year.endDate The end date of the year
+ *
+ * @returns {Promise<object>} the newly created year
+ */
+const create = async ({ startDate, endDate }) => {
+  const newYear = { startDate, endDate };
   debugLog(
-    `Updating year with id ${id} to startDate ${startDate} and endDate ${endDate}`
+    `Creating new year with startDate ${startDate} and endDate ${endDate}`
   );
-  const year = YEARS.find((year) => year.id === id);
-  if (!year) {
-    throw new Error(`Year with id ${id} not found`);
-  }
-  year.startDate = new Date(startDate);
-  year.endDate = new Date(endDate);
-  return year;
+  const id = await yearRepository.create(newYear);
+  return getById(id);
 };
 
-const deleteById = (id) => {
+/**
+ * Update an year by id
+ *
+ * @param {number} id the id of the year
+ * @param {object} year the year to update
+ * @param {string} year.startDate the start date of the year
+ * @param {string} year.endDate the end date of the year
+ *
+ * @returns {Promise<object>} the updated year
+ */
+const updateById = async (id, { startDate, endDate }) => {
+  const updatedYear = { startDate, endDate };
+  debugLog(
+    `Updating year with id ${id} with startDate ${startDate} and endDate ${endDate}`
+  );
+  await yearRepository.updateById(id, updatedYear);
+  return getById(id);
+};
+
+/**
+ * Delete an year by id
+ *
+ * @param {number} id the id of the year
+ */
+const deleteById = async (id) => {
   debugLog(`Deleting year with id ${id}`);
-  YEARS = YEARS.filter((year) => year.id !== id);
+  await yearRepository.deleteById(id);
 };
 
 module.exports = {

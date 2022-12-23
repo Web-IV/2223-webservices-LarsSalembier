@@ -2,15 +2,15 @@ const Router = require("@koa/router");
 const eventService = require("../service/event");
 
 const getAllEvents = async (ctx) => {
-  ctx.body = eventService.getAll();
+  ctx.body = await eventService.getAll();
 };
 
 const getEventById = async (ctx) => {
-  ctx.body = eventService.getById(ctx.params.id);
+  ctx.body = await eventService.getById(ctx.params.id);
 };
 
 const createEvent = async (ctx) => {
-  ctx.body = eventService.create({
+  ctx.body = await eventService.create({
     ...ctx.request.body,
     addressId: Number(ctx.request.body.addressId),
     startDateTime: Date(ctx.request.body.startDateTime),
@@ -22,7 +22,7 @@ const createEvent = async (ctx) => {
 };
 
 const updateEvent = async (ctx) => {
-  ctx.body = eventService.updateById(ctx.params.id, {
+  ctx.body = await eventService.updateById(ctx.params.id, {
     ...ctx.request.body,
     addressId: Number(ctx.request.body.addressId),
     startDateTime: Date(ctx.request.body.startDateTime),
@@ -34,7 +34,7 @@ const updateEvent = async (ctx) => {
 };
 
 const deleteEvent = async (ctx) => {
-  eventService.deleteById(ctx.params.id);
+  await eventService.deleteById(ctx.params.id);
   ctx.status = 204;
 };
 

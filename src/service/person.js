@@ -1,83 +1,79 @@
 const { getLogger } = require("../core/logging");
-let { PEOPLE, ADDRESSES } = require("../data/mock-data");
+const personRepository = require("../repository/person");
 
 const debugLog = (message, meta = {}) => {
   if (!this.logger) this.logger = getLogger();
   this.logger.debug(message, meta);
 };
 
-const getAll = () => {
+/**
+ * Get all people
+ *
+ * @returns {Promise<{items: Array, count: number}>} list of people and total count
+ */
+const getAll = async () => {
   debugLog("Fetching all people");
-  return { items: PEOPLE, count: PEOPLE.length };
+  const items = await personRepository.findAll();
+  const count = await personRepository.findCount();
+  return { items, count };
 };
 
-const getById = (id) => {
+/**
+ * Get person by id
+ *
+ * @param {number} id the id of the person
+ *
+ * @returns {Promise<object>} the person
+ */
+const getById = async (id) => {
   debugLog(`Fetching person with id ${id}`);
-  return PEOPLE.find((person) => person.id === id);
-};
-
-const create = ({ firstName, lastName, cellphone, addressId }) => {
-  if (!firstName || !lastName || !cellphone) {
-    throw new Error("Missing required fields");
-  }
-  if (addressId) {
-    const existingAddress = ADDRESSES.find(
-      (address) => address.id === addressId
-    );
-    if (!existingAddress) {
-      throw new Error(`Address with id ${addressId} not found`);
-    }
-  }
-
-  const maxId = Math.max(...PEOPLE.map((person) => person.id));
-  const newPerson = {
-    id: maxId + 1,
-    firstName,
-    lastName,
-    cellphone,
-    address: addressId
-      ? ADDRESSES.find((address) => address.id === addressId)
-      : null,
-  };
-  debugLog(
-    `Creating person with firstName ${firstName}, lastName ${lastName}, cellphone ${cellphone} and addressId ${addressId}`
-  );
-  PEOPLE.push(newPerson);
-  return newPerson;
-};
-
-const updateById = (id, { firstName, lastName, cellphone, addressId }) => {
-  if (!firstName || !lastName || !cellphone) {
-    throw new Error("Missing required fields");
-  }
-  debugLog(
-    `Updating person with id ${id} to firstName ${firstName}, lastName ${lastName}, cellphone ${cellphone} and addressId ${addressId}`
-  );
-  if (addressId) {
-    const existingAddress = ADDRESSES.find(
-      (address) => address.id === addressId
-    );
-    if (!existingAddress) {
-      throw new Error(`Address with id ${addressId} not found`);
-    }
-  }
-
-  const person = getById(id);
+  const person = await personRepository.findById(id);
   if (!person) {
     throw new Error(`Person with id ${id} not found`);
   }
-  person.firstName = firstName;
-  person.lastName = lastName;
-  person.cellphone = cellphone;
-  person.address = addressId
-    ? ADDRESSES.find((address) => address.id === addressId)
-    : null;
   return person;
 };
 
-const deleteById = (id) => {
+/**
+ * Create a new person
+ * @param {object} person The person to create
+ * @param {string} person.firstName The first name of the person
+ * @param {string} person.lastName The last name of the person
+ * @param {string} person.cellphone The cellphone of the person
+ * @param {number} person.addressId The id of the address of the person
+ *
+ * @returns {Promise<object>} the created person
+ */
+const create = async (person) => {
+  debugLog("Creating new person", person);
+  const id = await personRepository.create(person);
+  return getById(id);
+};
+
+/**
+ * Update a person by id
+ * @param {number} id The id of the person to update
+ * @param {object} person The person to update
+ * @param {string} person.firstName The first name of the person
+ * @param {string} person.lastName The last name of the person
+ * @param {string} person.cellphone The cellphone of the person
+ * @param {number} person.addressId The id of the address of the person
+ * @returns {Promise<object>} the updated person
+ */
+const updateById = async (id, updatedPersonData) => {
+  debugLog(`Updating person with id ${id}`, updatedPersonData);
+  await personRepository.updateById(id, updatedPersonData);
+  return getById(id);
+};
+
+/**
+ * Delete a person by id
+ *
+ * @param {number} id The id of the person to delete
+ */
+const deleteById = async (id) => {
   debugLog(`Deleting person with id ${id}`);
-  PEOPLE = PEOPLE.filter((person) => person.id !== id);
+  await personRepository.deleteById(id);
 };
 
 module.exports = {

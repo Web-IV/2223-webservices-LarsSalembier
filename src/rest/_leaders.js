@@ -2,15 +2,15 @@ const Router = require("@koa/router");
 const leaderService = require("../service/leader");
 
 const getAllLeaders = async (ctx) => {
-  ctx.body = leaderService.getAll();
+  ctx.body = await leaderService.getAll();
 };
 
 const getLeaderById = async (ctx) => {
-  ctx.body = leaderService.getById(ctx.params.id);
+  ctx.body = await leaderService.getById(ctx.params.id);
 };
 
 const createLeader = async (ctx) => {
-  ctx.body = leaderService.create({
+  ctx.body = await leaderService.create({
     personId: Number(ctx.request.body.personId),
     groupId: Number(ctx.request.body.groupId),
     yearId: Number(ctx.request.body.yearId),
@@ -18,7 +18,7 @@ const createLeader = async (ctx) => {
 };
 
 const updateLeaderById = async (ctx) => {
-  ctx.body = leaderService.updateById(ctx.params.id, {
+  ctx.body = await leaderService.updateById(ctx.params.id, {
     personId: Number(ctx.request.body.personId),
     groupId: Number(ctx.request.body.groupId),
     yearId: Number(ctx.request.body.yearId),
@@ -26,7 +26,7 @@ const updateLeaderById = async (ctx) => {
 };
 
 const deleteLeaderById = async (ctx) => {
-  leaderService.deleteById(ctx.params.id);
+  await leaderService.deleteById(ctx.params.id);
   ctx.status = 204;
 };
 

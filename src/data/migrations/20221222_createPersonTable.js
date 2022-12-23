@@ -4,8 +4,8 @@ module.exports = {
   up: async (knex) => {
     await knex.schema.createTable(tables.person, (table) => {
       table.increments("id").primary();
-      table.firstName("firstName", 255).notNullable();
-      table.lastName("lastName", 255).notNullable();
+      table.firstName("first_name", 255).notNullable();
+      table.lastName("last_name", 255).notNullable();
       table.cellphone("cellphone", 255).notNullable();
       table
         .integer("address_id")

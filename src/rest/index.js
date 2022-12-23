@@ -7,8 +7,6 @@ const installHealthRouter = require("./_health");
 const installLeaderRouter = require("./_leaders");
 const installPersonRouter = require("./_persons");
 const installYearRouter = require("./_years");
-const installAdultLeaderRouter = require("./_adultLeaders");
-const installHeadLeaderRouter = require("./_headLeaders");
 
 /**
  * Install all routes in the given Koa application.
@@ -28,8 +26,6 @@ module.exports = (app) => {
   installLeaderRouter(router);
   installPersonRouter(router);
   installYearRouter(router);
-  installAdultLeaderRouter(router);
-  installHeadLeaderRouter(router);
 
   app.use(router.routes()).use(router.allowedMethods());
 };

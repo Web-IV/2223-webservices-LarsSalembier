@@ -2,15 +2,15 @@ const Router = require("@koa/router");
 const yearService = require("../service/year");
 
 const getAllYears = async (ctx) => {
-  ctx.body = yearService.getAll();
+  ctx.body = await yearService.getAll();
 };
 
 const getYearById = async (ctx) => {
-  ctx.body = yearService.getById(ctx.params.id);
+  ctx.body = await yearService.getById(ctx.params.id);
 };
 
 const createYear = async (ctx) => {
-  ctx.body = yearService.create({
+  ctx.body = await yearService.create({
     ...ctx.request.body,
     startDate: new Date(ctx.request.body.startDate),
     endDate: new Date(ctx.request.body.endDate),
@@ -18,7 +18,7 @@ const createYear = async (ctx) => {
 };
 
 const updateYear = async (ctx) => {
-  ctx.body = yearService.updateById(ctx.params.id, {
+  ctx.body = await yearService.updateById(ctx.params.id, {
     ...ctx.request.body,
     startDate: new Date(ctx.request.body.startDate),
     endDate: new Date(ctx.request.body.endDate),
@@ -26,7 +26,7 @@ const updateYear = async (ctx) => {
 };
 
 const deleteYear = async (ctx) => {
-  yearService.deleteById(ctx.params.id);
+  await yearService.deleteById(ctx.params.id);
   ctx.status = 204;
 };
 
