@@ -1,6 +1,6 @@
-const { getLogger } = require("../core/logging");
-const ServiceError = require("../core/ServiceError");
-const eventRepository = require("../repository/event");
+const {getLogger} = require('../core/logging');
+const ServiceError = require('../core/ServiceError');
+const eventRepository = require('../repository/event');
 
 const debugLog = (message, meta = {}) => {
   if (!this.logger) this.logger = getLogger();
@@ -10,13 +10,14 @@ const debugLog = (message, meta = {}) => {
 /**
  * Get all events
  *
- * @returns {Promise<{items: Array, count: number}>} list of events and total count
+ * @return {Promise<{items: Array, count: number}>} list of events and total
+ * count
  */
 const getAll = async () => {
-  debugLog("Fetching all events");
+  debugLog('Fetching all events');
   const items = await eventRepository.findAll();
   const count = await eventRepository.findCount();
-  return { items, count };
+  return {items, count};
 };
 
 /**
@@ -24,7 +25,7 @@ const getAll = async () => {
  *
  * @param {number} id the id of the event
  *
- * @returns {Promise<object>} the event
+ * @return {Promise<object>} the event
  *
  * @throws {ServiceError.notFound} if the event is not found
  */
@@ -32,7 +33,7 @@ const getById = async (id) => {
   debugLog(`Fetching event with id ${id}`);
   const event = await eventRepository.findById(id);
   if (!event) {
-    throw new ServiceError.notFound(`Event with id ${id} not found`, { id });
+    throw new ServiceError.NotFound(`Event with id ${id} not found`, {id});
   }
   return event;
 };
@@ -49,10 +50,10 @@ const getById = async (id) => {
  * @param {string} event.targetAudience The target audience of the event
  * @param {number} event.yearId The id of the year of the event
  *
- * @returns {Promise<object>} the created event
+ * @return {Promise<object>} the created event
  */
 const create = async (event) => {
-  debugLog("Creating new event", event);
+  debugLog('Creating new event', event);
   const id = await eventRepository.create(event);
   return getById(id);
 };
@@ -61,22 +62,23 @@ const create = async (event) => {
  * Update an event by id
  *
  * @param {number} id The id of the event to update
- * @param {object} event The event to update
- * @param {string} event.name The name of the event
- * @param {string} event.description The description of the event
- * @param {number} event.addressId The id of the address of the event
- * @param {string} event.startDateTime The start date and time of the event
- * @param {string} event.endDateTime The end date and time of the event
- * @param {string} event.targetAudience The target audience of the event
- * @param {number} event.yearId The id of the year of the event
+ * @param {object} updatedEvent The event to update
+ * @param {string} updatedEvent.name The name of the event
+ * @param {string} updatedEvent.description The description of the event
+ * @param {number} updatedEvent.addressId The id of the address of the event
+ * @param {string} updatedEvent.startDateTime The start date and time of the
+ * event
+ * @param {string} updatedEvent.endDateTime The end date and time of the event
+ * @param {string} updatedEvent.targetAudience The target audience of the event
+ * @param {number} updatedEvent.yearId The id of the year of the event
  *
- * @returns {Promise<object>} the updated event
+ * @return {Promise<object>} the updated event
  *
  * @throws {ServiceError.notFound} if the event is not found
  */
-const updateById = async (id, updatedEventData) => {
-  debugLog(`Updating event with id ${id}`, updatedEventData);
-  await eventRepository.updateById(id, updatedEventData);
+const updateById = async (id, updatedEvent) => {
+  debugLog(`Updating event with id ${id}`, updatedEvent);
+  await eventRepository.updateById(id, updatedEvent);
   return getById(id);
 };
 
@@ -91,7 +93,7 @@ const deleteById = async (id) => {
   debugLog(`Deleting event with id ${id}`);
   const deleted = await eventRepository.deleteById(id);
   if (!deleted) {
-    throw new ServiceError.notFound(`Event with id ${id} not found`, { id });
+    throw new ServiceError.NotFound(`Event with id ${id} not found`, {id});
   }
 };
 

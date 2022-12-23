@@ -1,7 +1,7 @@
-const Joi = require("joi");
-const Router = require("@koa/router");
-const eventService = require("../service/event");
-const validate = require("./_validation");
+const Joi = require('joi');
+const Router = require('@koa/router');
+const eventService = require('../service/event');
+const validate = require('./_validation');
 
 const getAllEvents = async (ctx) => {
   ctx.body = await eventService.getAll();
@@ -10,7 +10,7 @@ getAllEvents.validationScheme = {
   query: Joi.object({
     limit: Joi.number().positive().max(1000).optional(),
     offset: Joi.number().min(0).optional(),
-  }).and("limit", "offset"),
+  }).and('limit', 'offset'),
 };
 
 const getEventById = async (ctx) => {
@@ -27,9 +27,9 @@ const createEvent = async (ctx) => {
     ...ctx.request.body,
     addressId: Number(ctx.request.body.addressId),
     startDateTime: Date(ctx.request.body.startDateTime),
-    endDateTime: ctx.request.body.endDateTime
-      ? Date(ctx.request.body.endDateTime)
-      : null,
+    endDateTime: ctx.request.body.endDateTime ?
+      Date(ctx.request.body.endDateTime) :
+      null,
     yearId: Number(ctx.request.body.yearId),
   });
 };
@@ -50,9 +50,9 @@ const updateEvent = async (ctx) => {
     ...ctx.request.body,
     addressId: Number(ctx.request.body.addressId),
     startDateTime: Date(ctx.request.body.startDateTime),
-    endDateTime: ctx.request.body.endDateTime
-      ? Date(ctx.request.body.endDateTime)
-      : null,
+    endDateTime: ctx.request.body.endDateTime ?
+      Date(ctx.request.body.endDateTime) :
+      null,
     yearId: Number(ctx.request.body.yearId),
   });
 };
@@ -88,14 +88,14 @@ deleteEvent.validationScheme = {
  */
 module.exports = (app) => {
   const router = new Router({
-    prefix: "/events",
+    prefix: '/events',
   });
 
-  router.get("/", validate(getAllEvents.validationScheme), getAllEvents);
-  router.get("/:id", validate(getEventById.validationScheme), getEventById);
-  router.post("/", validate(createEvent.validationScheme), createEvent);
-  router.put("/:id", validate(updateEvent.validationScheme), updateEvent);
-  router.delete("/:id", validate(deleteEvent.validationScheme), deleteEvent);
+  router.get('/', validate(getAllEvents.validationScheme), getAllEvents);
+  router.get('/:id', validate(getEventById.validationScheme), getEventById);
+  router.post('/', validate(createEvent.validationScheme), createEvent);
+  router.put('/:id', validate(updateEvent.validationScheme), updateEvent);
+  router.delete('/:id', validate(deleteEvent.validationScheme), deleteEvent);
 
   app.use(router.routes()).use(router.allowedMethods());
 };

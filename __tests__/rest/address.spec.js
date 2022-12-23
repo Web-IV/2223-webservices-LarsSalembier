@@ -1,41 +1,41 @@
-const { withServer } = require("../helpers");
-const { tables } = require("../../src/data");
+const {withServer} = require('../helpers');
+const {tables} = require('../../src/data');
 
 const data = {
   addresses: [
     {
       id: 1,
-      street: "Opvoedingstraat",
-      number: "129",
-      city: "Gent",
+      street: 'Opvoedingstraat',
+      number: '129',
+      city: 'Gent',
       zip: 9000,
     },
     {
       id: 2,
-      street: "Leopoldstraat",
-      number: "4b",
-      city: "Antwerp",
+      street: 'Leopoldstraat',
+      number: '4b',
+      city: 'Antwerp',
       zip: 2000,
     },
     {
       id: 3,
-      street: "Koningin Astridplein",
-      number: "128 (20)",
-      city: "Brussels",
+      street: 'Koningin Astridplein',
+      number: '128 (20)',
+      city: 'Brussels',
       zip: 1000,
     },
     {
       id: 4,
-      street: "Rue de la Loi",
-      number: "131",
-      city: "Luxembourg",
+      street: 'Rue de la Loi',
+      number: '131',
+      city: 'Luxembourg',
       zip: 1332,
     },
     {
       id: 5,
-      street: "Via del Corso",
-      number: "132",
-      city: "Rome",
+      street: 'Via del Corso',
+      number: '132',
+      city: 'Rome',
       zip: 186,
     },
   ],
@@ -45,27 +45,27 @@ const dataToDelete = {
   addresses: [1, 2, 3, 4, 5],
 };
 
-describe("Address REST API", () => {
+describe('Address REST API', () => {
   let request;
   let knex;
 
-  withServer(({ request: r, knex: k }) => {
+  withServer(({request: r, knex: k}) => {
     request = r;
     knex = k;
   });
 
-  const url = "/api/addresses";
+  const url = '/api/addresses';
 
-  describe("GET /api/addresses", () => {
+  describe('GET /api/addresses', () => {
     beforeAll(async () => {
       await knex(tables.address).insert(data.addresses);
     });
 
     afterAll(async () => {
-      await knex(tables.address).whereIn("id", dataToDelete.addresses).del();
+      await knex(tables.address).whereIn('id', dataToDelete.addresses).del();
     });
 
-    test("it should 200 and return all addresses", async () => {
+    test('it should 200 and return all addresses', async () => {
       const response = await request.get(url);
       expect(response.status).toBe(200);
       expect(response.body.count).toBeGreaterThanOrEqual(5);
@@ -73,24 +73,25 @@ describe("Address REST API", () => {
     });
   });
 
-  describe("GET /api/addresses/:id", () => {
+  describe('GET /api/addresses/:id', () => {
     beforeAll(async () => {
       await knex(tables.address).insert(data.addresses[0]);
     });
 
     afterAll(async () => {
       await knex(tables.address)
-        .where("id", dataToDelete.addresses[0].id)
-        .delete();
+          .where('id', dataToDelete.addresses[0].id)
+          .delete();
     });
 
-    test("it should 200 and return the address with the given id", async () => {
+    test('it should 200 and return the address with the given id', async () => {
       const response = await request.get(`${url}/${data.addresses[0].id}`);
       expect(response.status).toBe(200);
       expect(response.body).toEqual(data.addresses[0]);
     });
 
-    // test("it should 404 if the address with the given id does not exist", async () => {
+    // test("it should 404 if the address with the given id does not exist",
+    // async () => {
     //   const response = await request.get(`${url}/999`);
     //   expect(response.status).toBe(404);
     // });
@@ -101,25 +102,25 @@ describe("Address REST API", () => {
     // });
   });
 
-  describe("POST /api/addresses", () => {
+  describe('POST /api/addresses', () => {
     const addressesToDelete = [];
 
     afterAll(async () => {
-      await knex(tables.address).whereIn("id", addressesToDelete).delete();
+      await knex(tables.address).whereIn('id', addressesToDelete).delete();
     });
 
-    test("it should 201 and return the created address", async () => {
+    test('it should 201 and return the created address', async () => {
       const response = await request.post(url).send({
-        street: "ABCstraat",
-        number: "1000",
-        city: "Kaapstad",
+        street: 'ABCstraat',
+        number: '1000',
+        city: 'Kaapstad',
         zip: 1234,
       });
       expect(response.status).toBe(201);
       expect(response.body.id).toBeDefined();
-      expect(response.body.street).toBe("ABCstraat");
-      expect(response.body.number).toBe("1000");
-      expect(response.body.city).toBe("Kaapstad");
+      expect(response.body.street).toBe('ABCstraat');
+      expect(response.body.number).toBe('1000');
+      expect(response.body.city).toBe('Kaapstad');
       expect(response.body.zip).toBe(1234);
 
       addressesToDelete.push(response.body.id);
@@ -197,34 +198,35 @@ describe("Address REST API", () => {
     // });
   });
 
-  describe("PUT /api/addresses/:id", () => {
+  describe('PUT /api/addresses/:id', () => {
     beforeAll(async () => {
       await knex(tables.address).insert(data.addresses);
     });
 
     afterAll(async () => {
-      await knex(tables.address).whereIn("id", dataToDelete.addresses).del();
+      await knex(tables.address).whereIn('id', dataToDelete.addresses).del();
     });
 
-    test("it should 200 and return the updated address", async () => {
+    test('it should 200 and return the updated address', async () => {
       const response = await request
-        .put(`${url}/${data.addresses[0].id}`)
-        .send({
-          street: "Opvoedingstraat",
-          number: "129",
-          city: "Gent",
-          zip: 9000,
-        });
+          .put(`${url}/${data.addresses[0].id}`)
+          .send({
+            street: 'Opvoedingstraat',
+            number: '129',
+            city: 'Gent',
+            zip: 9000,
+          });
       expect(response.status).toBe(200);
       expect(response.body.id).toBe(data.addresses[0].id);
-      expect(response.body.street).toBe("Opvoedingstraat");
-      expect(response.body.number).toBe("129");
-      expect(response.body.city).toBe("Gent");
+      expect(response.body.street).toBe('Opvoedingstraat');
+      expect(response.body.number).toBe('129');
+      expect(response.body.city).toBe('Gent');
       expect(response.body.zip).toBe(9000);
     });
 
     // test("it should 400 if the request body is invalid", async () => {
-    //   const response = await request.put(`${url}/${data.addresses[0].id}`).send({});
+    //   const response = await request.put(`${url}/${data.addresses[0].id}`)
+    // .send({});
     //   expect(response.status).toBe(400);
     // });
 
@@ -308,7 +310,8 @@ describe("Address REST API", () => {
     //   expect(response.status).toBe(400);
     // });
 
-    // test("it should 404 if the address with the given id does not exist", async () => {
+    // test("it should 404 if the address with the given id does not exist",
+    // async () => {
     //   const response = await request.put(`${url}/999`).send({
     //     street: "Opvoedingstraat",
     //     number: "129",
@@ -318,23 +321,25 @@ describe("Address REST API", () => {
     //   expect(response.status).toBe(404);
     // });
 
-    describe("DELETE /api/addresses/:id", () => {
+    describe('DELETE /api/addresses/:id', () => {
       beforeAll(async () => {
         await knex(tables.address).insert(data.addresses[0]);
       });
 
-      test("it should 204 and return nothing", async () => {
+      test('it should 204 and return nothing', async () => {
         const response = await request.delete(`${url}/${data.addresses[0].id}`);
         expect(response.status).toBe(204);
         expect(response.body).toEqual({});
       });
 
-      // test("it should 404 if the address with the given id does not exist", async () => {
+      // test("it should 404 if the address with the given id does not exist",
+      // async () => {
       //   const response = await request.delete(`${url}/999`);
       //   expect(response.status).toBe(404);
       // });
 
-      // test("it should 400 if the address with the given id is still in use", async () => {
+      // test("it should 400 if the address with the given id is still in use",
+      // async () => {
       //   const response = await request.delete(`${url}/1`);
       //   expect(response.status).toBe(400);
       // });

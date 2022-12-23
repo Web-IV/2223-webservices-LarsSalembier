@@ -1,5 +1,5 @@
-const { withServer } = require("../helpers");
-const { tables } = require("../../src/data");
+const {withServer} = require('../helpers');
+const {tables} = require('../../src/data');
 
 const data = {
   leaders: [
@@ -37,28 +37,28 @@ const data = {
   people: [
     {
       id: 1,
-      first_name: "Emma",
-      last_name: "Smith",
-      cellphone: "0497 63 21 49",
+      first_name: 'Emma',
+      last_name: 'Smith',
+      cellphone: '0497 63 21 49',
       address_id: 1,
     },
   ],
   addresses: [
     {
       id: 1,
-      street: "Opvoedingstraat",
-      number: "129",
-      city: "Gent",
+      street: 'Opvoedingstraat',
+      number: '129',
+      city: 'Gent',
       zip: 9000,
     },
   ],
   groups: [
     {
       id: 1,
-      name: "Glimlachende Geitjes",
-      color: "roze",
-      mascot_name: "Geitje-Gary",
-      target_audience: "eerste t.e.m. tweede kleuter",
+      name: 'Glimlachende Geitjes',
+      color: 'roze',
+      mascot_name: 'Geitje-Gary',
+      target_audience: 'eerste t.e.m. tweede kleuter',
     },
   ],
   years: [
@@ -77,33 +77,33 @@ const dataToDelete = {
   groups: [1],
 };
 
-describe("Leader API", () => {
+describe('Leader API', () => {
   let request;
   let knex;
 
-  withServer(({ request: r, knex: k }) => {
+  withServer(({request: r, knex: k}) => {
     request = r;
     knex = k;
   });
 
-  const url = "/api/leaders";
+  const url = '/api/leaders';
 
-  describe("GET /api/leaders", () => {
+  describe('GET /api/leaders', () => {
     beforeAll(async () => {
       await knex(tables.leader).insert(data.leaders);
     });
 
     afterAll(async () => {
-      await knex(tables.leader).whereIn("id", dataToDelete.leaders).del();
+      await knex(tables.leader).whereIn('id', dataToDelete.leaders).del();
     });
 
-    it("should return all leaders and 200", async () => {
+    it('should return all leaders and 200', async () => {
       const response = await request.get(url);
       expect(response.status).toBe(200);
       expect(response.body.count).toBeGreaterThanOrEqual(5);
     });
 
-    describe("GET /api/leaders/:id", () => {
+    describe('GET /api/leaders/:id', () => {
       beforeAll(async () => {
         await knex(tables.address).insert(data.addresses[0]);
         await knex(tables.person).insert(data.people[0]);
@@ -114,20 +114,20 @@ describe("Leader API", () => {
 
       afterAll(async () => {
         await knex(tables.leader)
-          .where("id", dataToDelete.leaders[0].id)
-          .delete();
-        await knex(tables.year).where("id", dataToDelete.years[0].id).delete();
+            .where('id', dataToDelete.leaders[0].id)
+            .delete();
+        await knex(tables.year).where('id', dataToDelete.years[0].id).delete();
         await knex(tables.group)
-          .where("id", dataToDelete.groups[0].id)
+            .where('id', dataToDelete.groups[0].id)
 
-          .delete();
+            .delete();
         await knex(tables.person)
-          .where("id", dataToDelete.people[0].id)
-          .delete();
-        await knex(tables.address).where("id", dataToDelete.addresses[0].id);
+            .where('id', dataToDelete.people[0].id)
+            .delete();
+        await knex(tables.address).where('id', dataToDelete.addresses[0].id);
       });
 
-      it("should 200 and return the leader with the given id", async () => {
+      it('should 200 and return the leader with the given id', async () => {
         const response = await request.get(`${url}/${data.leaders[0].id}`);
         expect(response.status).toBe(200);
         expect(response.body).toEqual({
@@ -171,7 +171,7 @@ describe("Leader API", () => {
       // });
     });
 
-    describe("POST /api/leaders", () => {
+    describe('POST /api/leaders', () => {
       beforeAll(async () => {
         await knex(tables.address).insert(data.addresses[0]);
         await knex(tables.person).insert(data.people[0]);
@@ -181,20 +181,20 @@ describe("Leader API", () => {
 
       afterAll(async () => {
         await knex(tables.leader)
-          .where("id", dataToDelete.leaders[0].id)
-          .delete();
-        await knex(tables.year).where("id", dataToDelete.years[0].id).delete();
+            .where('id', dataToDelete.leaders[0].id)
+            .delete();
+        await knex(tables.year).where('id', dataToDelete.years[0].id).delete();
         await knex(tables.group)
-          .where("id", dataToDelete.groups[0].id)
+            .where('id', dataToDelete.groups[0].id)
 
-          .delete();
+            .delete();
         await knex(tables.person)
-          .where("id", dataToDelete.people[0].id)
-          .delete();
-        await knex(tables.address).where("id", dataToDelete.addresses[0].id);
+            .where('id', dataToDelete.people[0].id)
+            .delete();
+        await knex(tables.address).where('id', dataToDelete.addresses[0].id);
       });
 
-      it("should 201 and return the created leader", async () => {
+      it('should 201 and return the created leader', async () => {
         const response = await request.post(url).send({
           personId: data.people[0].id,
           groupId: data.groups[0].id,
@@ -231,34 +231,34 @@ describe("Leader API", () => {
         });
       });
 
-      it("should 400 when the personId is not a number", async () => {
+      it('should 400 when the personId is not a number', async () => {
         const response = await request.post(url).send({
-          personId: "abc",
+          personId: 'abc',
           groupId: data.groups[0].id,
           yearId: data.years[0].id,
         });
         expect(response.status).toBe(400);
       });
 
-      it("should 400 when the groupId is not a number", async () => {
+      it('should 400 when the groupId is not a number', async () => {
         const response = await request.post(url).send({
           personId: data.people[0].id,
-          groupId: "abc",
+          groupId: 'abc',
           yearId: data.years[0].id,
         });
         expect(response.status).toBe(400);
       });
 
-      it("should 400 when the yearId is not a number", async () => {
+      it('should 400 when the yearId is not a number', async () => {
         const response = await request.post(url).send({
           personId: data.people[0].id,
           groupId: data.groups[0].id,
-          yearId: "abc",
+          yearId: 'abc',
         });
         expect(response.status).toBe(400);
       });
 
-      it("should 400 when the personId is not a valid id", async () => {
+      it('should 400 when the personId is not a valid id', async () => {
         const response = await request.post(url).send({
           personId: 999,
           groupId: data.groups[0].id,
@@ -267,7 +267,7 @@ describe("Leader API", () => {
         expect(response.status).toBe(400);
       });
 
-      it("should 400 when the groupId is not a valid id", async () => {
+      it('should 400 when the groupId is not a valid id', async () => {
         const response = await request.post(url).send({
           personId: data.people[0].id,
           groupId: 999,
@@ -276,7 +276,7 @@ describe("Leader API", () => {
         expect(response.status).toBe(400);
       });
 
-      it("should 400 when the yearId is not a valid id", async () => {
+      it('should 400 when the yearId is not a valid id', async () => {
         const response = await request.post(url).send({
           personId: data.people[0].id,
           groupId: data.groups[0].id,
@@ -286,7 +286,7 @@ describe("Leader API", () => {
       });
     });
 
-    describe("PUT /api/leaders/:id", () => {
+    describe('PUT /api/leaders/:id', () => {
       beforeAll(async () => {
         await knex(tables.address).insert(data.addresses[0]);
         await knex(tables.person).insert(data.people[0]);
@@ -297,26 +297,26 @@ describe("Leader API", () => {
 
       afterAll(async () => {
         await knex(tables.leader)
-          .where("id", dataToDelete.leaders[0].id)
-          .delete();
-        await knex(tables.year).where("id", dataToDelete.years[0].id).delete();
+            .where('id', dataToDelete.leaders[0].id)
+            .delete();
+        await knex(tables.year).where('id', dataToDelete.years[0].id).delete();
         await knex(tables.group)
-          .where("id", dataToDelete.groups[0].id)
-          .delete();
+            .where('id', dataToDelete.groups[0].id)
+            .delete();
         await knex(tables.person)
-          .where("id", dataToDelete.people[0].id)
-          .delete();
-        await knex(tables.address).where("id", dataToDelete.addresses[0].id);
+            .where('id', dataToDelete.people[0].id)
+            .delete();
+        await knex(tables.address).where('id', dataToDelete.addresses[0].id);
       });
 
-      it("should 200 and return the updated leader", async () => {
+      it('should 200 and return the updated leader', async () => {
         const response = await request
-          .put(`${url}/${data.leaders[0].id}`)
-          .send({
-            personId: data.people[0].id,
-            groupId: data.groups[0].id,
-            yearId: data.years[0].id,
-          });
+            .put(`${url}/${data.leaders[0].id}`)
+            .send({
+              personId: data.people[0].id,
+              groupId: data.groups[0].id,
+              yearId: data.years[0].id,
+            });
         expect(response.status).toBe(200);
         expect(response.body).toEqual({
           id: data.leaders[0].id,
@@ -348,73 +348,73 @@ describe("Leader API", () => {
         });
       });
 
-      it("should 400 when the personId is not a number", async () => {
+      it('should 400 when the personId is not a number', async () => {
         const response = await request
-          .put(`${url}/${data.leaders[0].id}`)
-          .send({
-            personId: "abc",
-            groupId: data.groups[0].id,
-            yearId: data.years[0].id,
-          });
+            .put(`${url}/${data.leaders[0].id}`)
+            .send({
+              personId: 'abc',
+              groupId: data.groups[0].id,
+              yearId: data.years[0].id,
+            });
         expect(response.status).toBe(400);
       });
 
-      it("should 400 when the groupId is not a number", async () => {
+      it('should 400 when the groupId is not a number', async () => {
         const response = await request
-          .put(`${url}/${data.leaders[0].id}`)
-          .send({
-            personId: data.people[0].id,
-            groupId: "abc",
-            yearId: data.years[0].id,
-          });
+            .put(`${url}/${data.leaders[0].id}`)
+            .send({
+              personId: data.people[0].id,
+              groupId: 'abc',
+              yearId: data.years[0].id,
+            });
         expect(response.status).toBe(400);
       });
 
-      it("should 400 when the yearId is not a number", async () => {
+      it('should 400 when the yearId is not a number', async () => {
         const response = await request
-          .put(`${url}/${data.leaders[0].id}`)
-          .send({
-            personId: data.people[0].id,
-            groupId: data.groups[0].id,
-            yearId: "abc",
-          });
+            .put(`${url}/${data.leaders[0].id}`)
+            .send({
+              personId: data.people[0].id,
+              groupId: data.groups[0].id,
+              yearId: 'abc',
+            });
         expect(response.status).toBe(400);
       });
 
-      it("should 400 when the personId is not a valid id", async () => {
+      it('should 400 when the personId is not a valid id', async () => {
         const response = await request
-          .put(`${url}/${data.leaders[0].id}`)
-          .send({
-            personId: 999,
-            groupId: data.groups[0].id,
-            yearId: data.years[0].id,
-          });
+            .put(`${url}/${data.leaders[0].id}`)
+            .send({
+              personId: 999,
+              groupId: data.groups[0].id,
+              yearId: data.years[0].id,
+            });
         expect(response.status).toBe(400);
       });
 
-      it("should 400 when the groupId is not a valid id", async () => {
+      it('should 400 when the groupId is not a valid id', async () => {
         const response = await request
-          .put(`${url}/${data.leaders[0].id}`)
-          .send({
-            personId: data.people[0].id,
-            groupId: 999,
-            yearId: data.years[0].id,
-          });
+            .put(`${url}/${data.leaders[0].id}`)
+            .send({
+              personId: data.people[0].id,
+              groupId: 999,
+              yearId: data.years[0].id,
+            });
         expect(response.status).toBe(400);
       });
 
-      it("should 400 when the yearId is not a valid id", async () => {
+      it('should 400 when the yearId is not a valid id', async () => {
         const response = await request
-          .put(`${url}/${data.leaders[0].id}`)
-          .send({
-            personId: data.people[0].id,
-            groupId: data.groups[0].id,
-            yearId: 999,
-          });
+            .put(`${url}/${data.leaders[0].id}`)
+            .send({
+              personId: data.people[0].id,
+              groupId: data.groups[0].id,
+              yearId: 999,
+            });
         expect(response.status).toBe(400);
       });
 
-      it("should 404 when the leader does not exist", async () => {
+      it('should 404 when the leader does not exist', async () => {
         const response = await request.put(`${url}/999`).send({
           personId: data.people[0].id,
           groupId: data.groups[0].id,

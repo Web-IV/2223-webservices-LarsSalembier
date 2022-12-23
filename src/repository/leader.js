@@ -1,5 +1,5 @@
-const { tables, getKnex } = require("../data/index");
-const { getLogger } = require("../core/logging");
+const {tables, getKnex} = require('../data/index');
+const {getLogger} = require('../core/logging');
 
 const SELECT_COLUMNS = [
   `${tables.leader}.id`,
@@ -18,38 +18,38 @@ const SELECT_COLUMNS = [
 ];
 
 const formatLeader = ({
-  person_id,
-  person_first_name,
-  person_last_name,
-  person_cellphone,
-  group_id,
-  group_name,
-  group_color,
-  group_mascot_name,
-  group_target_audience,
-  year_id,
-  year_start_date,
-  year_end_date,
+  person_id: personId,
+  person_first_name: personFirstName,
+  person_last_name: personLastName,
+  person_cellphone: personCellphone,
+  group_id: groupId,
+  group_name: groupName,
+  group_color: groupColor,
+  group_mascot_name: groupMascotName,
+  group_target_audience: groupTargetName,
+  year_id: yearId,
+  year_start_date: yearStartDate,
+  year_end_date: yearEndDate,
   ...rest
 }) => ({
   ...rest,
   person: {
-    id: person_id,
-    first_name: person_first_name,
-    last_name: person_last_name,
-    cellphone: person_cellphone,
+    id: personId,
+    first_name: personFirstName,
+    last_name: personLastName,
+    cellphone: personCellphone,
   },
   group: {
-    id: group_id,
-    name: group_name,
-    color: group_color,
-    mascot_name: group_mascot_name,
-    target_audience: group_target_audience,
+    id: groupId,
+    name: groupName,
+    color: groupColor,
+    mascot_name: groupMascotName,
+    target_audience: groupTargetName,
   },
   year: {
-    id: year_id,
-    start_date: year_start_date,
-    end_date: year_end_date,
+    id: yearId,
+    start_date: yearStartDate,
+    end_date: yearEndDate,
   },
 });
 
@@ -58,16 +58,17 @@ const formatLeader = ({
  */
 const findAll = async () => {
   const leaders = await getKnex()(tables.leader)
-    .select(SELECT_COLUMNS)
-    .join(
-      tables.person,
-      `${tables.person}.id`,
-      "=",
-      `${tables.leader}.person_id`
-    )
-    .join(tables.group, `${tables.group}.id`, "=", `${tables.leader}.group_id`)
-    .join(tables.year, `${tables.year}.id`, "=", `${tables.leader}.year_id`)
-    .orderBy(`${tables.person}.last_name`, "asc");
+      .select(SELECT_COLUMNS)
+      .join(
+          tables.person,
+          `${tables.person}.id`,
+          '=',
+          `${tables.leader}.person_id`,
+      )
+      .join(tables.group, `${tables.group}.id`, '=',
+          `${tables.leader}.group_id`)
+      .join(tables.year, `${tables.year}.id`, '=', `${tables.leader}.year_id`)
+      .orderBy(`${tables.person}.last_name`, 'asc');
 
   return leaders.map(formatLeader);
 };
@@ -78,7 +79,7 @@ const findAll = async () => {
 const findCount = async () => {
   const [count] = await getKnex()(tables.leader).count();
 
-  return count["count(*)"];
+  return count['count(*)'];
 };
 
 /**
@@ -88,16 +89,17 @@ const findCount = async () => {
  */
 const findById = async (id) => {
   const [leader] = await getKnex()(tables.leader)
-    .select(SELECT_COLUMNS)
-    .join(
-      tables.person,
-      `${tables.person}.id`,
-      "=",
-      `${tables.leader}.person_id`
-    )
-    .join(tables.group, `${tables.group}.id`, "=", `${tables.leader}.group_id`)
-    .join(tables.year, `${tables.year}.id`, "=", `${tables.leader}.year_id`)
-    .where(`${tables.leader}.id`, id);
+      .select(SELECT_COLUMNS)
+      .join(
+          tables.person,
+          `${tables.person}.id`,
+          '=',
+          `${tables.leader}.person_id`,
+      )
+      .join(tables.group, `${tables.group}.id`, '=',
+          `${tables.leader}.group_id`)
+      .join(tables.year, `${tables.year}.id`, '=', `${tables.leader}.year_id`)
+      .where(`${tables.leader}.id`, id);
 
   return leader && formatLeader(leader);
 };
@@ -110,17 +112,19 @@ const findById = async (id) => {
  * @param {number} leader.groupId
  * @param {number} leader.yearId
  *
- * @returns {Promise<number>} The id of the created leader
+ * @return {Promise<number>} The id of the created leader
  */
-const create = async ({ personId, groupId, yearId }) => {
+const create = async ({personId, groupId, yearId}) => {
   try {
     const [id] = await getKnex()(tables.leader).insert({
       person_id: personId,
       group_id: groupId,
       year_id: yearId,
     });
+
+    return id;
   } catch (error) {
-    getLogger().error("Failed to create leader", { error });
+    getLogger().error('Failed to create leader', {error});
     throw error;
   }
 };
@@ -134,9 +138,9 @@ const create = async ({ personId, groupId, yearId }) => {
  * @param {number} leader.groupId
  * @param {number} leader.yearId
  *
- * @returns {Promise<number>} The id of the updated leader
+ * @return {Promise<number>} The id of the updated leader
  */
-const updateById = async (id, { personId, groupId, yearId }) => {
+const updateById = async (id, {personId, groupId, yearId}) => {
   try {
     await getKnex()(tables.leader).where(`${tables.leader}.id`, id).update({
       person_id: personId,
@@ -144,7 +148,7 @@ const updateById = async (id, { personId, groupId, yearId }) => {
       year_id: yearId,
     });
   } catch (error) {
-    getLogger().error("Failed to update leader", { error });
+    getLogger().error('Failed to update leader', {error});
     throw error;
   }
 };
@@ -154,14 +158,14 @@ const updateById = async (id, { personId, groupId, yearId }) => {
  *
  * @param {number} id
  *
- * @returns {Promise<boolean>} True if the leader was deleted
+ * @return {Promise<boolean>} True if the leader was deleted
  */
 const deleteById = async (id) => {
   try {
-    const rowsAffected = await getKnex()(tables.leader).where({ id }).del();
+    const rowsAffected = await getKnex()(tables.leader).where({id}).del();
     return rowsAffected > 0;
   } catch (error) {
-    getLogger().error("Failed to delete leader", { error });
+    getLogger().error('Failed to delete leader', {error});
     throw error;
   }
 };

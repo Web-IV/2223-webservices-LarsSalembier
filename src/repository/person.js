@@ -1,11 +1,11 @@
-const { tables, getKnex } = require("../data/index");
-const { getLogger } = require("../core/logging");
+const {tables, getKnex} = require('../data/index');
+const {getLogger} = require('../core/logging');
 
 const SELECT_COLUMNS = [
   `${tables.person}.id`,
-  "first_name",
-  "last_name",
-  "cellphone",
+  'first_name',
+  'last_name',
+  'cellphone',
   `${tables.address}.id as address_id`,
   `${tables.address}.street as address_street`,
   `${tables.address}.number as address_number`,
@@ -14,38 +14,38 @@ const SELECT_COLUMNS = [
 ];
 
 const formatPerson = ({
-  address_id,
-  address_street,
-  address_number,
-  address_city,
-  address_zip,
+  address_id: addressId,
+  address_street: addressStreet,
+  address_number: addressNumber,
+  address_city: addressCity,
+  address_zip: addressZip,
   ...rest
 }) => ({
   ...rest,
   address: {
-    id: address_id,
-    street: address_street,
-    number: address_number,
-    city: address_city,
-    zip: address_zip,
+    id: addressId,
+    street: addressStreet,
+    number: addressNumber,
+    city: addressCity,
+    zip: addressZip,
   },
 });
 
 /**
  * Get all persons
  *
- * @returns {Promise<Array>} list of persons
+ * @return {Promise<Array>} list of persons
  */
 const findAll = async () => {
   const persons = await getKnex()(tables.person)
-    .select(SELECT_COLUMNS)
-    .join(
-      tables.address,
-      `${tables.address}.id`,
-      "=",
-      `${tables.person}.address_id`
-    )
-    .orderBy("last_name", "ASC");
+      .select(SELECT_COLUMNS)
+      .join(
+          tables.address,
+          `${tables.address}.id`,
+          '=',
+          `${tables.person}.address_id`,
+      )
+      .orderBy('last_name', 'ASC');
   return persons.map(formatPerson);
 };
 
@@ -54,7 +54,7 @@ const findAll = async () => {
  */
 const count = async () => {
   const [count] = await getKnex()(tables.person).count();
-  return count["count(*)"];
+  return count['count(*)'];
 };
 
 /**
@@ -64,14 +64,14 @@ const count = async () => {
  */
 const findById = async (id) => {
   const [person] = await getKnex()(tables.person)
-    .select(SELECT_COLUMNS)
-    .join(
-      tables.address,
-      `${tables.address}.id`,
-      "=",
-      `${tables.person}.address_id`
-    )
-    .where(`${tables.person}.id`, id);
+      .select(SELECT_COLUMNS)
+      .join(
+          tables.address,
+          `${tables.address}.id`,
+          '=',
+          `${tables.person}.address_id`,
+      )
+      .where(`${tables.person}.id`, id);
   return person && formatPerson(person);
 };
 
@@ -84,9 +84,9 @@ const findById = async (id) => {
  * @param {string} person.cellphone
  * @param {number} person.addressId
  *
- * @returns {Promise<number>} The id of the created person
+ * @return {Promise<number>} The id of the created person
  */
-const create = async ({ firstName, lastName, cellphone, addressId }) => {
+const create = async ({firstName, lastName, cellphone, addressId}) => {
   try {
     const [id] = await getKnex()(tables.person).insert({
       first_name: firstName,
@@ -97,7 +97,7 @@ const create = async ({ firstName, lastName, cellphone, addressId }) => {
     return id;
   } catch (error) {
     const logger = getLogger();
-    logger.error("Error creating person", { error });
+    logger.error('Error creating person', {error});
     throw error;
   }
 };
@@ -112,14 +112,14 @@ const create = async ({ firstName, lastName, cellphone, addressId }) => {
  * @param {string} person.cellphone
  * @param {number} person.addressId
  *
- * @returns {Promise<number>} The id of the updated person
+ * @return {Promise<number>} The id of the updated person
  */
 const updateById = async (
-  id,
-  { firstName, lastName, cellphone, addressId }
+    id,
+    {firstName, lastName, cellphone, addressId},
 ) => {
   try {
-    await getKnex()(tables.person).where("id", id).update({
+    await getKnex()(tables.person).where('id', id).update({
       first_name: firstName,
       last_name: lastName,
       cellphone,
@@ -128,7 +128,7 @@ const updateById = async (
     return id;
   } catch (error) {
     const logger = getLogger();
-    logger.error("Error updating person", { error });
+    logger.error('Error updating person', {error});
     throw error;
   }
 };
@@ -138,15 +138,15 @@ const updateById = async (
  *
  * @param {number} id
  *
- * @returns {Promise<boolean>} true if the person was deleted, false otherwise
+ * @return {Promise<boolean>} true if the person was deleted, false otherwise
  */
 const deleteById = async (id) => {
   try {
-    const rowsAffected = await getKnex()(tables.person).where("id", id).del();
+    const rowsAffected = await getKnex()(tables.person).where('id', id).del();
     return rowsAffected > 0;
   } catch (error) {
     const logger = getLogger();
-    logger.error("Error deleting person", { error });
+    logger.error('Error deleting person', {error});
     throw error;
   }
 };

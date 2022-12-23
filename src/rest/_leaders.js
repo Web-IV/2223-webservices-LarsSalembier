@@ -1,7 +1,7 @@
-const Joi = require("joi");
-const Router = require("@koa/router");
-const leaderService = require("../service/leader");
-const validate = require("./_validation");
+const Joi = require('joi');
+const Router = require('@koa/router');
+const leaderService = require('../service/leader');
+const validate = require('./_validation');
 
 const getAllLeaders = async (ctx) => {
   ctx.body = await leaderService.getAll();
@@ -10,7 +10,7 @@ getAllLeaders.validationScheme = {
   query: Joi.object({
     limit: Joi.number().positive().max(1000).optional(),
     offset: Joi.number().min(0).optional(),
-  }).and("limit", "offset"),
+  }).and('limit', 'offset'),
 };
 
 const getLeaderById = async (ctx) => {
@@ -72,21 +72,21 @@ deleteLeaderById.validationScheme = {
  */
 module.exports = (app) => {
   const router = new Router({
-    prefix: "/leaders",
+    prefix: '/leaders',
   });
 
-  router.get("/", validate(getAllLeaders.validationScheme), getAllLeaders);
-  router.get("/:id", validate(getLeaderById.validationScheme), getLeaderById);
-  router.post("/", validate(createLeader.validationScheme), createLeader);
+  router.get('/', validate(getAllLeaders.validationScheme), getAllLeaders);
+  router.get('/:id', validate(getLeaderById.validationScheme), getLeaderById);
+  router.post('/', validate(createLeader.validationScheme), createLeader);
   router.put(
-    "/:id",
-    validate(updateLeaderById.validationScheme),
-    updateLeaderById
+      '/:id',
+      validate(updateLeaderById.validationScheme),
+      updateLeaderById,
   );
   router.delete(
-    "/:id",
-    validate(deleteLeaderById.validationScheme),
-    deleteLeaderById
+      '/:id',
+      validate(deleteLeaderById.validationScheme),
+      deleteLeaderById,
   );
 
   app.use(router.routes()).use(router.allowedMethods());

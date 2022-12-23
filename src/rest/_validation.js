@@ -1,16 +1,16 @@
-const Joi = require("joi");
+const Joi = require('joi');
 
 const JOI_OPTIONS = {
   abortEarly: true,
   allowUnknown: false,
   context: true,
   convert: true,
-  presence: "required",
+  presence: 'required',
 };
 
 const cleanupJoiError = (error) => {
-  error.details.reduce((resultObj, { message, path, type }) => {
-    const joinedPath = path.join(".") || "value";
+  error.details.reduce((resultObj, {message, path, type}) => {
+    const joinedPath = path.join('.') || 'value';
     if (!resultObj[joinedPath]) {
       resultObj[joinedPath] = [];
     }
@@ -47,9 +47,9 @@ const validate = (schema) => {
 
         value: queryValue,
       } = schema.query.validate(
-        ctx.query,
+          ctx.query,
 
-        JOI_OPTIONS
+          JOI_OPTIONS,
       );
 
       if (queryErrors) {
@@ -69,9 +69,9 @@ const validate = (schema) => {
 
         value: bodyValue,
       } = schema.body.validate(
-        ctx.request.body,
+          ctx.request.body,
 
-        JOI_OPTIONS
+          JOI_OPTIONS,
       );
 
       if (bodyErrors) {
@@ -91,9 +91,9 @@ const validate = (schema) => {
 
         value: paramsValue,
       } = schema.params.validate(
-        ctx.params,
+          ctx.params,
 
-        JOI_OPTIONS
+          JOI_OPTIONS,
       );
 
       if (paramsErrors) {
@@ -104,8 +104,8 @@ const validate = (schema) => {
     }
 
     if (Object.keys(errors).length) {
-      ctx.throw(400, "Validation failed, check details for more information", {
-        code: "VALIDATION_FAILED",
+      ctx.throw(400, 'Validation failed, check details for more information', {
+        code: 'VALIDATION_FAILED',
 
         details: errors,
       });

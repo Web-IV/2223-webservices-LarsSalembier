@@ -1,13 +1,13 @@
-const { tables, getKnex } = require("../data/index");
-const { getLogger } = require("../core/logging");
+const {tables, getKnex} = require('../data/index');
+const {getLogger} = require('../core/logging');
 
 /**
  * Find all groups
  *
- * @returns {Promise<Array>} list of groups
+ * @return {Promise<Array>} list of groups
  */
 const findAll = () => {
-  return getKnex()(tables.group).select().orderBy("title", "ASC");
+  return getKnex()(tables.group).select().orderBy('title', 'ASC');
 };
 
 /**
@@ -15,20 +15,20 @@ const findAll = () => {
  *
  * @param {number} id the id of the group
  *
- * @returns {Promise<object>} the group
+ * @return {Promise<object>} the group
  */
 const findById = (id) => {
-  return getKnex()(tables.group).select().where("id", id).first();
+  return getKnex()(tables.group).select().where('id', id).first();
 };
 
 /**
  * Calculate the total number of groups
  *
- * @returns {Promise<number>} the total number of groups
+ * @return {Promise<number>} the total number of groups
  */
 const findCount = async () => {
   const [count] = await getKnex()(tables.group).count();
-  return count["count(*)"];
+  return count['count(*)'];
 };
 
 /**
@@ -40,9 +40,9 @@ const findCount = async () => {
  * @param {string} group.mascotName The mascot name of the group
  * @param {string} group.targetAudience The target audience of the group
  *
- * @returns {Promise<number>} id of the newly created group
+ * @return {Promise<number>} id of the newly created group
  */
-const create = async ({ name, color, mascotName, targetAudience }) => {
+const create = async ({name, color, mascotName, targetAudience}) => {
   try {
     const [id] = await getKnex()(tables.group).insert({
       name,
@@ -53,7 +53,7 @@ const create = async ({ name, color, mascotName, targetAudience }) => {
     return id;
   } catch (error) {
     const logger = getLogger();
-    logger.error("Error creating group", { error });
+    logger.error('Error creating group', {error});
     throw error;
   }
 };
@@ -68,22 +68,22 @@ const create = async ({ name, color, mascotName, targetAudience }) => {
  * @param {string} group.mascotName The mascot name of the group
  * @param {string} group.targetAudience The target audience of the group
  *
- * @returns {Promise<number>} id of the updated group
+ * @return {Promise<number>} id of the updated group
  */
-const updateById = async (id, { name, color, mascotName, targetAudience }) => {
+const updateById = async (id, {name, color, mascotName, targetAudience}) => {
   try {
     const [id] = await getKnex()(tables.group)
-      .update({
-        name,
-        color,
-        mascotName,
-        targetAudience,
-      })
-      .where("id", id);
+        .update({
+          name,
+          color,
+          mascotName,
+          targetAudience,
+        })
+        .where('id', id);
     return id;
   } catch (error) {
     const logger = getLogger();
-    logger.error("Error updating group", { error });
+    logger.error('Error updating group', {error});
     throw error;
   }
 };
@@ -93,15 +93,15 @@ const updateById = async (id, { name, color, mascotName, targetAudience }) => {
  *
  * @param {number} id the id of the group
  *
- * @returns {Promise<boolean>} true if the group was deleted
+ * @return {Promise<boolean>} true if the group was deleted
  */
 const deleteById = async (id) => {
   try {
-    const rowsAffected = await getKnex()(tables.group).delete().where("id", id);
+    const rowsAffected = await getKnex()(tables.group).delete().where('id', id);
     return rowsAffected > 0;
   } catch (error) {
     const logger = getLogger();
-    logger.error("Error deleting group", { error });
+    logger.error('Error deleting group', {error});
     throw error;
   }
 };

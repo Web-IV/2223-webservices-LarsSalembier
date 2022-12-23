@@ -1,27 +1,27 @@
-const { tables } = require("..");
+const {tables} = require('..');
 
 module.exports = {
   up: async (knex) => {
     await knex.schema.createTable(tables.leader, (table) => {
-      table.increments("id").primary();
+      table.increments('id').primary();
       table
-        .integer("person_id")
-        .unsigned()
-        .references("id")
-        .inTable(tables.person)
-        .notNullable();
+          .integer('person_id')
+          .unsigned()
+          .references('id')
+          .inTable(tables.person)
+          .notNullable();
       table
-        .integer("group_id")
-        .unsigned()
-        .references("id")
-        .inTable(tables.group)
-        .notNullable();
+          .integer('group_id')
+          .unsigned()
+          .references('id')
+          .inTable(tables.group)
+          .notNullable();
       table
-        .integer("year_id")
-        .unsigned()
-        .references("id")
-        .inTable(tables.year)
-        .notNullable();
+          .integer('year_id')
+          .unsigned()
+          .references('id')
+          .inTable(tables.year)
+          .notNullable();
     });
   },
   down: async (knex) => {

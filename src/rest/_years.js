@@ -1,7 +1,7 @@
-const Joi = require("joi");
-const Router = require("@koa/router");
-const yearService = require("../service/year");
-const validate = require("./_validation");
+const Joi = require('joi');
+const Router = require('@koa/router');
+const yearService = require('../service/year');
+const validate = require('./_validation');
 
 const getAllYears = async (ctx) => {
   ctx.body = await yearService.getAll();
@@ -10,7 +10,7 @@ getAllYears.validationScheme = {
   query: Joi.object({
     limit: Joi.number().positive().max(1000).optional(),
     offset: Joi.number().min(0).optional(),
-  }).and("limit", "offset"),
+  }).and('limit', 'offset'),
 };
 
 const getYearById = async (ctx) => {
@@ -70,14 +70,14 @@ deleteYear.validationScheme = {
  */
 module.exports = (app) => {
   const router = new Router({
-    prefix: "/years",
+    prefix: '/years',
   });
 
-  router.get("/", validate(getAllYears.validationScheme), getAllYears);
-  router.get("/:id", validate(getYearById.validationScheme), getYearById);
-  router.post("/", validate(createYear.validationScheme), createYear);
-  router.put("/:id", validate(updateYear.validationScheme), updateYear);
-  router.delete("/:id", validate(deleteYear.validationScheme), deleteYear);
+  router.get('/', validate(getAllYears.validationScheme), getAllYears);
+  router.get('/:id', validate(getYearById.validationScheme), getYearById);
+  router.post('/', validate(createYear.validationScheme), createYear);
+  router.put('/:id', validate(updateYear.validationScheme), updateYear);
+  router.delete('/:id', validate(deleteYear.validationScheme), deleteYear);
 
   app.use(router.routes()).use(router.allowedMethods());
 };

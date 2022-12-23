@@ -1,12 +1,17 @@
-const packageJson = require("../../package.json");
+const packageJson = require('../../package.json');
 
 /**
- * Check if the server is healthy. Can be extended to check database connection, etc.
+ * Check if the server is healthy. Can be extended to check database
+ * connection, etc.
+ *
+ * @return {Object} The response.
  */
-const ping = () => ({ pong: true });
+const ping = () => ({pong: true});
 
 /**
  * Get the running server's information.
+ *
+ * @return {Object} The response.
  */
 const getVersion = () => ({
   env: process.env.NODE_ENV,

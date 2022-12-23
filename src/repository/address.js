@@ -1,13 +1,13 @@
-const { tables, getKnex } = require("../data/index");
-const { getLogger } = require("../core/logging");
+const {tables, getKnex} = require('../data/index');
+const {getLogger} = require('../core/logging');
 
 /**
  * Find all addresses
  *
- * @returns {Promise<Array>} list of addresses
+ * @return {Promise<Array>} list of addresses
  */
 const findAll = () => {
-  return getKnex()(tables.address).select().orderBy("name", "ASC");
+  return getKnex()(tables.address).select().orderBy('name', 'ASC');
 };
 
 /**
@@ -15,20 +15,20 @@ const findAll = () => {
  *
  * @param {number} id
  *
- * @returns {Promise<object>} the address
+ * @return {Promise<object>} the address
  */
 const findById = (id) => {
-  return getKnex()(tables.address).select().where("id", id).first();
+  return getKnex()(tables.address).select().where('id', id).first();
 };
 
 /**
  * Calculate the total number of addresses
  *
- * @returns {Promise<number>} the total number of addresses
+ * @return {Promise<number>} the total number of addresses
  */
 const findCount = async () => {
   const [count] = await getKnex()(tables.place).count();
-  return count["count(*)"];
+  return count['count(*)'];
 };
 
 /**
@@ -40,9 +40,9 @@ const findCount = async () => {
  * @param {string} address.city The city of the address
  * @param {number} address.zipCode The zipCode of the address
  *
- * @returns {Promise<number>} id of the newly created address
+ * @return {Promise<number>} id of the newly created address
  */
-const create = async ({ street, number, city, zipCode }) => {
+const create = async ({street, number, city, zipCode}) => {
   try {
     const [id] = await getKnex()(tables.address).insert({
       street,
@@ -53,7 +53,7 @@ const create = async ({ street, number, city, zipCode }) => {
     return id;
   } catch (error) {
     const logger = getLogger();
-    logger.error("Error creating address", { error });
+    logger.error('Error creating address', {error});
     throw error;
   }
 };
@@ -68,11 +68,11 @@ const create = async ({ street, number, city, zipCode }) => {
  * @param {string} address.city The city of the address
  * @param {number} address.zipCode The zipCode of the address
  *
- * @returns {Promise<number>} id of the updated address
+ * @return {Promise<number>} id of the updated address
  */
-const updateById = async (id, { street, number, city, zipCode }) => {
+const updateById = async (id, {street, number, city, zipCode}) => {
   try {
-    await getKnex()(tables.address).where("id", id).update({
+    await getKnex()(tables.address).where('id', id).update({
       street,
       number,
       city,
@@ -81,7 +81,7 @@ const updateById = async (id, { street, number, city, zipCode }) => {
     return id;
   } catch (error) {
     const logger = getLogger();
-    logger.error("Error updating address", { error });
+    logger.error('Error updating address', {error});
     throw error;
   }
 };
@@ -91,15 +91,15 @@ const updateById = async (id, { street, number, city, zipCode }) => {
  *
  * @param {number} id
  *
- * @returns {Promise<boolean>} true if the address was deleted, false otherwise
+ * @return {Promise<boolean>} true if the address was deleted, false otherwise
  */
 const deleteById = async (id) => {
   try {
-    const rowsAffected = await getKnex()(tables.address).where("id", id).del();
+    const rowsAffected = await getKnex()(tables.address).where('id', id).del();
     return rowsAffected > 0;
   } catch (error) {
     const logger = getLogger();
-    logger.error("Error deleting address", { error });
+    logger.error('Error deleting address', {error});
     throw error;
   }
 };

@@ -1,7 +1,7 @@
-const Joi = require("joi");
-const Router = require("@koa/router");
-const personService = require("../service/person");
-const validate = require("./_validation");
+const Joi = require('joi');
+const Router = require('@koa/router');
+const personService = require('../service/person');
+const validate = require('./_validation');
 
 const getAllPeople = async (ctx) => {
   ctx.body = await personService.getAll();
@@ -10,7 +10,7 @@ getAllPeople.validationScheme = {
   query: Joi.object({
     limit: Joi.number().positive().max(1000).optional(),
     offset: Joi.number().min(0).optional(),
-  }).and("limit", "offset"),
+  }).and('limit', 'offset'),
 };
 
 const getPersonById = async (ctx) => {
@@ -72,14 +72,14 @@ deletePerson.validationScheme = {
  */
 module.exports = (app) => {
   const router = new Router({
-    prefix: "/people",
+    prefix: '/people',
   });
 
-  router.get("/", validate(getAllPeople.validationScheme), getAllPeople);
-  router.get("/:id", validate(getPersonById.validationScheme), getPersonById);
-  router.post("/", validate(createPerson.validationScheme), createPerson);
-  router.put("/:id", validate(updatePerson.validationScheme), updatePerson);
-  router.delete("/:id", validate(deletePerson.validationScheme), deletePerson);
+  router.get('/', validate(getAllPeople.validationScheme), getAllPeople);
+  router.get('/:id', validate(getPersonById.validationScheme), getPersonById);
+  router.post('/', validate(createPerson.validationScheme), createPerson);
+  router.put('/:id', validate(updatePerson.validationScheme), updatePerson);
+  router.delete('/:id', validate(deletePerson.validationScheme), deletePerson);
 
   app.use(router.routes()).use(router.allowedMethods());
 };

@@ -1,13 +1,13 @@
-const { tables, getKnex } = require("../data/index");
-const { getLogger } = require("../core/logging");
+const {tables, getKnex} = require('../data/index');
+const {getLogger} = require('../core/logging');
 
 const SELECT_COLUMNS = [
   `${tables.event}.id`,
-  "name",
-  "description",
+  'name',
+  'description',
   `${tables.event}.start_date as event_start_date`,
   `${tables.event}.end_date as event_end_date`,
-  "target_audience",
+  'target_audience',
   `${tables.event}.end_date`,
   `${tables.address}.id as address_id`,
   `${tables.address}.street as address_street`,
@@ -20,37 +20,37 @@ const SELECT_COLUMNS = [
 ];
 
 const formatEvent = ({
-  address_id,
-  address_street,
-  address_number,
-  address_city,
-  address_zip,
-  year_id,
-  year_start_date,
-  year_end_date,
-  event_start_date,
-  event_end_date,
+  address_id: addressId,
+  address_street: addressStreet,
+  address_number: addressNumber,
+  address_city: addressCity,
+  address_zip: addressZip,
+  year_id: yearId,
+  year_start_date: yearStartDate,
+  year_end_date: yearEndDate,
+  event_start_date: eventStartDate,
+  event_end_date: eventEndDate,
   ...rest
 }) => {
-  const address = address_id
-    ? {
-        id: address_id,
-        street: address_street,
-        number: address_number,
-        city: address_city,
-        zip: address_zip,
-      }
-    : null;
+  const address = addressId ?
+    {
+      id: addressId,
+      street: addressStreet,
+      number: addressNumber,
+      city: addressCity,
+      zip: addressZip,
+    } :
+    null;
 
   return {
     ...rest,
-    start_date: event_start_date,
-    end_date: event_end_date,
+    start_date: eventStartDate,
+    end_date: eventEndDate,
     address: address,
     year: {
-      id: year_id,
-      start_date: year_start_date,
-      end_date: year_end_date,
+      id: yearId,
+      start_date: yearStartDate,
+      end_date: yearEndDate,
     },
   };
 };
@@ -58,19 +58,19 @@ const formatEvent = ({
 /**
  * Get all events
  *
- * @returns {Promise<Array>} events
+ * @return {Promise<Array>} events
  */
 const findAll = async () => {
   const events = await getKnex()(tables.event)
-    .select(SELECT_COLUMNS)
-    .join(
-      tables.address,
-      `${tables.event}.address_id`,
-      "=",
-      `${tables.address}.id`
-    )
-    .join(tables.year, `${tables.event}.year_id`, "=", `${tables.year}.id`)
-    .orderBy(`${tables.event}.start_date`, "desc");
+      .select(SELECT_COLUMNS)
+      .join(
+          tables.address,
+          `${tables.event}.address_id`,
+          '=',
+          `${tables.address}.id`,
+      )
+      .join(tables.year, `${tables.event}.year_id`, '=', `${tables.year}.id`)
+      .orderBy(`${tables.event}.start_date`, 'desc');
 
   return events.map(formatEvent);
 };
@@ -78,12 +78,12 @@ const findAll = async () => {
 /**
  * Calculate the number of events
  *
- * @returns {Promise<number>} number of events
+ * @return {Promise<number>} number of events
  */
 const findCount = async () => {
   const [count] = await getKnex()(tables.event).count();
 
-  return count["count(*)"];
+  return count['count(*)'];
 };
 
 /**
@@ -91,19 +91,19 @@ const findCount = async () => {
  *
  * @param {number} id
  *
- * @returns {Promise<Object>} event
+ * @return {Promise<Object>} event
  */
 const findById = async (id) => {
   const [event] = await getKnex()(tables.event)
-    .select(SELECT_COLUMNS)
-    .join(
-      tables.address,
-      `${tables.event}.address_id`,
-      "=",
-      `${tables.address}.id`
-    )
-    .join(tables.year, `${tables.event}.year_id`, "=", `${tables.year}.id`)
-    .where(`${tables.event}.id`, id);
+      .select(SELECT_COLUMNS)
+      .join(
+          tables.address,
+          `${tables.event}.address_id`,
+          '=',
+          `${tables.address}.id`,
+      )
+      .join(tables.year, `${tables.event}.year_id`, '=', `${tables.year}.id`)
+      .where(`${tables.event}.id`, id);
 
   return formatEvent(event);
 };
@@ -120,32 +120,32 @@ const findById = async (id) => {
  * @param {string} event.target_audience
  * @param {number} event.year_id
  *
- * @returns {Promise<number>} id of the created event
+ * @return {Promise<number>} id of the created event
  */
 const create = async ({
   name,
   description,
-  address_id,
-  start_date,
-  end_date,
-  target_audience,
-  year_id,
+  address_id: addressId,
+  start_date: startDate,
+  end_date: endDate,
+  target_audience: targetAudience,
+  year_id: yearId,
 }) => {
   try {
     const [id] = await getKnex()(tables.event).insert({
       name,
       description,
-      address_id,
-      start_date,
-      end_date,
-      target_audience,
-      year_id,
+      address_id: addressId,
+      start_date: startDate,
+      end_date: endDate,
+      target_audience: targetAudience,
+      year_id: yearId,
     });
 
     return id;
   } catch (error) {
     const logger = getLogger();
-    logger.error("Error creating event", { error });
+    logger.error('Error creating event', {error});
     throw error;
   }
 };
@@ -163,37 +163,37 @@ const create = async ({
  * @param {string} event.target_audience
  * @param {number} event.year_id
  *
- * @returns {Promise<number>} id of the updated event
+ * @return {Promise<number>} id of the updated event
  */
 const updateById = async (
-  id,
-  {
-    name,
-    description,
-    address_id,
-    start_date,
-    end_date,
-    target_audience,
-    year_id,
-  }
+    id,
+    {
+      name,
+      description,
+      address_id: addressId,
+      start_date: startDate,
+      end_date: endDate,
+      target_audience: targetAudience,
+      year_id: yearId,
+    },
 ) => {
   try {
     const [id] = await getKnex()(tables.event)
-      .update({
-        name,
-        description,
-        address_id,
-        start_date,
-        end_date,
-        target_audience,
-        year_id,
-      })
-      .where(`${tables.event}.id`, id);
+        .update({
+          name,
+          description,
+          address_id: addressId,
+          start_date: startDate,
+          end_date: endDate,
+          target_audience: targetAudience,
+          year_id: yearId,
+        })
+        .where(`${tables.event}.id`, id);
 
     return id;
   } catch (error) {
     const logger = getLogger();
-    logger.error("Error updating event", { error });
+    logger.error('Error updating event', {error});
     throw error;
   }
 };
@@ -203,18 +203,18 @@ const updateById = async (
  *
  * @param {number} id
  *
- * @returns {Promise<boolean>} true if the event was deleted
+ * @return {Promise<boolean>} true if the event was deleted
  */
 const deleteById = async (id) => {
   try {
     const rowsAffected = await getKnex()(tables.event)
-      .delete()
-      .where(`${tables.event}.id`, id);
+        .delete()
+        .where(`${tables.event}.id`, id);
 
     return rowsAffected > 0;
   } catch (error) {
     const logger = getLogger();
-    logger.error("Error deleting event", { error });
+    logger.error('Error deleting event', {error});
     throw error;
   }
 };

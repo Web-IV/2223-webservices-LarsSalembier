@@ -1,18 +1,18 @@
-const config = require("config");
-const knex = require("knex");
-const { join } = require("path");
+const config = require('config');
+const knex = require('knex');
+const {join} = require('path');
 
-const { getLogger } = require("../core/logging");
+const {getLogger} = require('../core/logging');
 
-const NODE_ENV = config.get("env");
-const isDevelopment = NODE_ENV === "development";
+const NODE_ENV = config.get('env');
+const isDevelopment = NODE_ENV === 'development';
 
-const DATABASE_CLIENT = config.get("database.client");
-const DATABASE_HOST = config.get("database.host");
-const DATABASE_PORT = config.get("database.port");
-const DATABASE_NAME = config.get("database.name");
-const DATABASE_USERNAME = config.get("database.username");
-const DATABASE_PASSWORD = config.get("database.password");
+const DATABASE_CLIENT = config.get('database.client');
+const DATABASE_HOST = config.get('database.host');
+const DATABASE_PORT = config.get('database.port');
+const DATABASE_NAME = config.get('database.name');
+const DATABASE_USERNAME = config.get('database.username');
+const DATABASE_PASSWORD = config.get('database.password');
 
 let knexInstance = null;
 
@@ -26,9 +26,15 @@ const getKnexLogger = (logger, level) => (message) => {
   }
 };
 
+/**
+ * Initialize the database connection
+ *
+ * @return {knex} The knex instance
+ * @throws {Error} If the database connection could not be established
+ */
 async function initializeData() {
   const logger = getLogger();
-  logger.info("Initializing connection to database");
+  logger.info('Initializing connection to database');
 
   const knexOptions = {
     client: DATABASE_CLIENT,
@@ -41,21 +47,21 @@ async function initializeData() {
     },
     debug: isDevelopment,
     log: {
-      debug: getKnexLogger(logger, "debug"),
-      warn: getKnexLogger(logger, "warn"),
-      error: getKnexLogger(logger, "error"),
+      debug: getKnexLogger(logger, 'debug'),
+      warn: getKnexLogger(logger, 'warn'),
+      error: getKnexLogger(logger, 'error'),
       deprecate: (method, alternative) =>
-        logger.warn("Knex reported something deprecated", {
+        logger.warn('Knex reported something deprecated', {
           method,
           alternative,
         }),
     },
     migrations: {
-      tableName: "knex_meta",
-      directory: join("src", "data", "migrations"),
+      tableName: 'knex_meta',
+      directory: join('src', 'data', 'migrations'),
     },
     seeds: {
-      directory: join("src", "data", "seeds"),
+      directory: join('src', 'data', 'seeds'),
     },
   };
 
@@ -63,18 +69,19 @@ async function initializeData() {
 
   // Check the connection, create the database and then reconnect.
   try {
-    await knexInstance.raw("SELECT 1+1 AS result");
+    await knexInstance.raw('SELECT 1+1 AS result');
     await knexInstance.raw(`CREATE DATABASE IF NOT EXISTS ${DATABASE_NAME}`);
 
-    // We need to update the Knex configuration and reconnect to use the created database by default.
+    // We need to update the Knex configuration and reconnect to use the
+    // created database by default.
     await knexInstance.destroy();
 
     knexOptions.connection.database = DATABASE_NAME;
     knexInstance = knex(knexOptions);
-    await knexInstance.raw("SELECT 1+1 AS result");
+    await knexInstance.raw('SELECT 1+1 AS result');
   } catch (error) {
-    logger.error(error.message, { error });
-    throw new Error("Could not initialize the data layer");
+    logger.error(error.message, {error});
+    throw new Error('Could not initialize the data layer');
   }
 
   // Run migrations
@@ -83,7 +90,7 @@ async function initializeData() {
     await knexInstance.migrate.latest();
     migrationsFailed = false;
   } catch (error) {
-    logger.error("Error while migrating the database", { error });
+    logger.error('Error while migrating the database', {error});
   }
 
   // Undo last migration if it failed
@@ -91,11 +98,11 @@ async function initializeData() {
     try {
       await knexInstance.migrate.down();
     } catch (error) {
-      logger.error("Error while undoing the last migration", { error });
+      logger.error('Error while undoing the last migration', {error});
     }
 
     // No point in starting the server if the migrations failed
-    throw new Error("Migrations failed");
+    throw new Error('Migrations failed');
   }
 
   // Run seeds in development
@@ -103,42 +110,55 @@ async function initializeData() {
     try {
       await knexInstance.seed.run();
     } catch (error) {
-      logger.error("Error while seeding the database", { error });
+      logger.error('Error while seeding the database', {error});
     }
   }
 
-  logger.info("Successfully connected to database");
+  logger.info('Successfully connected to database');
   return knexInstance;
 }
 
+/**
+ * Shutdown the database connection
+ *
+ * @return {Promise<void>}
+ * @throws {Error} If the database connection could not be shut down
+ */
 async function shutdownData() {
   const logger = getLogger();
-  logger.info("Shutting down connection to database");
+  logger.info('Shutting down connection to database');
 
   await knexInstance.destroy();
   knexInstance = null;
 
-  logger.info("Successfully shut down connection to database");
+  logger.info('Successfully shut down connection to database');
 }
 
+/**
+ * Get the knex instance
+ *
+ * @return {knex} The knex instance
+ * @throws {Error} If the data layer has not been initialized
+ * @see initializeData
+ */
 function getKnex() {
   if (!knexInstance) {
-    throw new Error("Data layer not initialized");
+    throw new Error('Data layer not initialized');
   }
 
   return knexInstance;
 }
 
 const tables = {
-  address: "addresses",
-  article: "articles",
-  event: "events",
-  group: "groups",
-  leader: "leaders",
-  headLeader: "head_leaders",
-  adultLeader: "adult_leaders",
-  person: "people",
-  year: "years",
+  address: 'addresses',
+  article: 'articles',
+  event: 'events',
+  group: 'groups',
+  leader: 'leaders',
+  headLeader: 'head_leaders',
+  adultLeader: 'adult_leaders',
+  person: 'people',
+  year: 'years',
 };
 
 module.exports = {

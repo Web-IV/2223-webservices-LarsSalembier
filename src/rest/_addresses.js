@@ -1,7 +1,7 @@
-const Joi = require("joi");
-const Router = require("@koa/router");
-const addressService = require("../service/address");
-const validate = require("./_validation");
+const Joi = require('joi');
+const Router = require('@koa/router');
+const addressService = require('../service/address');
+const validate = require('./_validation');
 
 const getAllAddresses = async (ctx) => {
   ctx.body = await addressService.getAll();
@@ -10,7 +10,7 @@ getAllAddresses.validationScheme = {
   query: Joi.object({
     limit: Joi.number().positive().max(1000).optional(),
     offset: Joi.number().min(0).optional(),
-  }).and("limit", "offset"),
+  }).and('limit', 'offset'),
 };
 
 const getAddressById = async (ctx) => {
@@ -72,17 +72,17 @@ deleteAddress.validationScheme = {
  */
 module.exports = (app) => {
   const router = new Router({
-    prefix: "/addresses",
+    prefix: '/addresses',
   });
 
-  router.get("/", validate(getAllAddresses.validationScheme), getAllAddresses);
-  router.get("/:id", validate(getAddressById.validationScheme), getAddressById);
-  router.post("/", validate(createAddress.validationScheme), createAddress);
-  router.put("/:id", validate(updateAddress.validationScheme), updateAddress);
+  router.get('/', validate(getAllAddresses.validationScheme), getAllAddresses);
+  router.get('/:id', validate(getAddressById.validationScheme), getAddressById);
+  router.post('/', validate(createAddress.validationScheme), createAddress);
+  router.put('/:id', validate(updateAddress.validationScheme), updateAddress);
   router.delete(
-    "/:id",
-    validate(deleteAddress.validationScheme),
-    deleteAddress
+      '/:id',
+      validate(deleteAddress.validationScheme),
+      deleteAddress,
   );
 
   app.use(router.routes()).use(router.allowedMethods());

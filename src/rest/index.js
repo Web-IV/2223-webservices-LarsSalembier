@@ -1,12 +1,12 @@
-const Router = require("@koa/router");
-const installAddressRouter = require("./_addresses");
-const installArticleRouter = require("./_articles");
-const installEventRouter = require("./_events");
-const installGroupRouter = require("./_groups");
-const installHealthRouter = require("./_health");
-const installLeaderRouter = require("./_leaders");
-const installPersonRouter = require("./_people");
-const installYearRouter = require("./_years");
+const Router = require('@koa/router');
+const installAddressRouter = require('./_addresses');
+const installArticleRouter = require('./_articles');
+const installEventRouter = require('./_events');
+const installGroupRouter = require('./_groups');
+const installHealthRouter = require('./_health');
+const installLeaderRouter = require('./_leaders');
+const installPersonRouter = require('./_people');
+const installYearRouter = require('./_years');
 
 /**
  * Install all routes in the given Koa application.
@@ -15,7 +15,7 @@ const installYearRouter = require("./_years");
  */
 module.exports = (app) => {
   const router = new Router({
-    prefix: "/api",
+    prefix: '/api',
   });
 
   installAddressRouter(router);

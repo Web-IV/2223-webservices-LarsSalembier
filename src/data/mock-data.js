@@ -1,38 +1,38 @@
-let PEOPLE = [
+const PEOPLE = [
   {
     id: 1,
-    firstName: "John",
-    lastName: "Smith",
-    cellphone: "1234567890",
+    firstName: 'John',
+    lastName: 'Smith',
+    cellphone: '1234567890',
     address: ADDRESSES[0],
   },
   {
     id: 2,
-    firstName: "Jane",
-    lastName: "Doe",
-    cellphone: "0987654321",
+    firstName: 'Jane',
+    lastName: 'Doe',
+    cellphone: '0987654321',
     address: null,
   },
 ];
 
-let ADDRESSES = [
+const ADDRESSES = [
   {
     id: 1,
-    street: "Dorpsstraat",
-    number: "1",
-    city: "Houthulst",
-    zip: "8650",
+    street: 'Dorpsstraat',
+    number: '1',
+    city: 'Houthulst',
+    zip: '8650',
   },
   {
     id: 2,
-    street: "Stadenstraat",
-    number: "15b",
-    city: "Houthulst",
-    zip: "8650",
+    street: 'Stadenstraat',
+    number: '15b',
+    city: 'Houthulst',
+    zip: '8650',
   },
 ];
 
-let LEADERS = [
+const LEADERS = [
   {
     id: 1,
     person: PEOPLE[0],
@@ -63,50 +63,50 @@ const ADULT_LEADERS = [
   },
 ];
 
-let GROUPS = [
+const GROUPS = [
   {
     id: 1,
-    name: "Kabouters",
-    color: "red",
-    mascotName: "Karel",
-    targetAudience: "12-14",
+    name: 'Kabouters',
+    color: 'red',
+    mascotName: 'Karel',
+    targetAudience: '12-14',
   },
   {
     id: 2,
-    name: "Welpen",
-    color: "blue",
+    name: 'Welpen',
+    color: 'blue',
     mascotName: null,
-    targetAudience: "boys 14-16",
+    targetAudience: 'boys 14-16',
   },
 ];
 
-let ARTICLES = [
+const ARTICLES = [
   {
     id: 1,
-    title: "Info",
-    content: "# Info",
+    title: 'Info',
+    content: '# Info',
   },
   {
     id: 2,
-    title: "Contact",
-    content: "# Contact",
+    title: 'Contact',
+    content: '# Contact',
   },
 ];
 
-let EVENTS = [
+const EVENTS = [
   {
     id: 1,
-    name: "Kamp",
-    description: "Kamp",
+    name: 'Kamp',
+    description: 'Kamp',
     address: ADDRESSES[0],
     startDate: new Date(2019, 7, 1),
     endDate: new Date(2019, 7, 8),
-    targetAudience: "6-18",
+    targetAudience: '6-18',
     year: YEARS[0],
   },
   {
     id: 2,
-    name: "Kamp",
+    name: 'Kamp',
     description: null,
     address: null,
     startDate: new Date(2020, 7, 1),
@@ -116,7 +116,7 @@ let EVENTS = [
   },
 ];
 
-let YEARS = [
+const YEARS = [
   {
     id: 1,
     startDate: new Date(2019, 8, 1),

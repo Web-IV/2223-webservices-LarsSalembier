@@ -1,7 +1,7 @@
-const Joi = require("joi");
-const Router = require("@koa/router");
-const articleService = require("../service/article");
-const validate = require("./_validation");
+const Joi = require('joi');
+const Router = require('@koa/router');
+const articleService = require('../service/article');
+const validate = require('./_validation');
 
 const getAllArticles = async (ctx) => {
   ctx.body = await articleService.getAll();
@@ -10,7 +10,7 @@ getAllArticles.validationScheme = {
   query: Joi.object({
     limit: Joi.number().positive().max(1000).optional(),
     offset: Joi.number().min(0).optional(),
-  }).and("limit", "offset"),
+  }).and('limit', 'offset'),
 };
 
 const getArticleById = async (ctx) => {
@@ -62,17 +62,17 @@ deleteArticle.validationScheme = {
  */
 module.exports = (app) => {
   const router = new Router({
-    prefix: "/articles",
+    prefix: '/articles',
   });
 
-  router.get("/", validate(getAllArticles.validationScheme), getAllArticles);
-  router.get("/:id", validate(getArticleById.validationScheme), getArticleById);
-  router.post("/", validate(createArticle.validationScheme), createArticle);
-  router.put("/:id", validate(updateArticle.validationScheme), updateArticle);
+  router.get('/', validate(getAllArticles.validationScheme), getAllArticles);
+  router.get('/:id', validate(getArticleById.validationScheme), getArticleById);
+  router.post('/', validate(createArticle.validationScheme), createArticle);
+  router.put('/:id', validate(updateArticle.validationScheme), updateArticle);
   router.delete(
-    "/:id",
-    validate(deleteArticle.validationScheme),
-    deleteArticle
+      '/:id',
+      validate(deleteArticle.validationScheme),
+      deleteArticle,
   );
 
   app.use(router.routes()).use(router.allowedMethods());

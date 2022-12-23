@@ -1,6 +1,6 @@
-const { getLogger } = require("../core/logging");
-const ServiceError = require("../core/ServiceError");
-const yearRepository = require("../repository/year");
+const {getLogger} = require('../core/logging');
+const ServiceError = require('../core/ServiceError');
+const yearRepository = require('../repository/year');
 
 const debugLog = (message, meta = {}) => {
   if (!this.logger) this.logger = getLogger();
@@ -10,13 +10,14 @@ const debugLog = (message, meta = {}) => {
 /**
  * Get all years
  *
- * @returns {Promise<{items: Array, count: number}>} list of years and total count
+ * @return {Promise<{items: Array, count: number}>} list of years and total
+ * count
  */
 const getAll = async () => {
-  debugLog("Fetching all years");
+  debugLog('Fetching all years');
   const items = await yearRepository.findAll();
   const count = await yearRepository.findCount();
-  return { items, count };
+  return {items, count};
 };
 
 /**
@@ -24,7 +25,7 @@ const getAll = async () => {
  *
  * @param {number} id the id of the year
  *
- * @returns {Promise<object>} the year
+ * @return {Promise<object>} the year
  *
  * @throws {ServiceError.notFound} if the year is not found
  */
@@ -32,7 +33,7 @@ const getById = (id) => {
   debugLog(`Fetching year with id ${id}`);
   const year = yearRepository.findById(id);
   if (!year) {
-    throw new ServiceError.notFound(`Year with id ${id} not found`, { id });
+    throw new ServiceError.NotFound(`Year with id ${id} not found`, {id});
   }
   return year;
 };
@@ -44,12 +45,12 @@ const getById = (id) => {
  * @param {string} year.startDate The start date of the year
  * @param {string} year.endDate The end date of the year
  *
- * @returns {Promise<object>} the newly created year
+ * @return {Promise<object>} the newly created year
  */
-const create = async ({ startDate, endDate }) => {
-  const newYear = { startDate, endDate };
+const create = async ({startDate, endDate}) => {
+  const newYear = {startDate, endDate};
   debugLog(
-    `Creating new year with startDate ${startDate} and endDate ${endDate}`
+      `Creating new year with startDate ${startDate} and endDate ${endDate}`,
   );
   const id = await yearRepository.create(newYear);
   return getById(id);
@@ -63,14 +64,15 @@ const create = async ({ startDate, endDate }) => {
  * @param {string} year.startDate the start date of the year
  * @param {string} year.endDate the end date of the year
  *
- * @returns {Promise<object>} the updated year
+ * @return {Promise<object>} the updated year
  *
  * @throws {ServiceError.notFound} if the year is not found
  */
-const updateById = async (id, { startDate, endDate }) => {
-  const updatedYear = { startDate, endDate };
+const updateById = async (id, {startDate, endDate}) => {
+  const updatedYear = {startDate, endDate};
   debugLog(
-    `Updating year with id ${id} with startDate ${startDate} and endDate ${endDate}`
+      `Updating year with id ${id} with startDate ${startDate} and
+      endDate ${endDate}`,
   );
   await yearRepository.updateById(id, updatedYear);
   return getById(id);
@@ -87,7 +89,7 @@ const deleteById = async (id) => {
   debugLog(`Deleting year with id ${id}`);
   const deleted = yearRepository.deleteById(id);
   if (!deleted) {
-    throw new ServiceError.notFound(`Year with id ${id} not found`, { id });
+    throw new ServiceError.NotFound(`Year with id ${id} not found`, {id});
   }
 };
 

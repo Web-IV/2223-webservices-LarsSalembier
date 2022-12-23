@@ -1,7 +1,6 @@
-const Joi = require("joi");
-const Router = require("@koa/router");
-const healthService = require("../service/health");
-const validate = require("./_validation");
+const Router = require('@koa/router');
+const healthService = require('../service/health');
+const validate = require('./_validation');
 
 const ping = async (ctx) => {
   ctx.body = healthService.ping();
@@ -20,11 +19,11 @@ getVersion.validationScheme = null;
  */
 module.exports = (app) => {
   const router = new Router({
-    prefix: "/health",
+    prefix: '/health',
   });
 
-  router.get("/ping", validate(ping.validationScheme), ping);
-  router.get("/version", validate(getVersion.validationScheme), getVersion);
+  router.get('/ping', validate(ping.validationScheme), ping);
+  router.get('/version', validate(getVersion.validationScheme), getVersion);
 
   app.use(router.routes()).use(router.allowedMethods());
 };

@@ -1,7 +1,7 @@
-const Joi = require("joi");
-const Router = require("@koa/router");
-const groupService = require("../service/group");
-const validate = require("./_validation");
+const Joi = require('joi');
+const Router = require('@koa/router');
+const groupService = require('../service/group');
+const validate = require('./_validation');
 
 const getAllGroups = async (ctx) => {
   ctx.body = await groupService.getAll();
@@ -10,7 +10,7 @@ getAllGroups.validationScheme = {
   query: Joi.object({
     limit: Joi.number().positive().max(1000).optional(),
     offset: Joi.number().min(0).optional(),
-  }).and("limit", "offset"),
+  }).and('limit', 'offset'),
 };
 
 const getGroupById = async (ctx) => {
@@ -66,14 +66,14 @@ deleteGroup.validationScheme = {
  */
 module.exports = (app) => {
   const router = new Router({
-    prefix: "/groups",
+    prefix: '/groups',
   });
 
-  router.get("/", validate(getAllGroups.validationScheme), getAllGroups);
-  router.get("/:id", validate(getGroupById.validationScheme), getGroupById);
-  router.post("/", validate(createGroup.validationScheme), createGroup);
-  router.put("/:id", validate(updateGroup.validationScheme), updateGroup);
-  router.delete("/:id", validate(deleteGroup.validationScheme), deleteGroup);
+  router.get('/', validate(getAllGroups.validationScheme), getAllGroups);
+  router.get('/:id', validate(getGroupById.validationScheme), getGroupById);
+  router.post('/', validate(createGroup.validationScheme), createGroup);
+  router.put('/:id', validate(updateGroup.validationScheme), updateGroup);
+  router.delete('/:id', validate(deleteGroup.validationScheme), deleteGroup);
 
   app.use(router.routes()).use(router.allowedMethods());
 };
