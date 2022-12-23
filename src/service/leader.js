@@ -33,7 +33,7 @@ const getById = async (id) => {
   debugLog(`Fetching leader with id ${id}`);
   const leader = await leaderRepository.findById(id);
   if (!leader) {
-    throw new ServiceError.NotFound(`Leader with id ${id} not found`, {id});
+    throw ServiceError.notFound(`Leader with id ${id} not found`, {id});
   }
   return leader;
 };
@@ -84,7 +84,7 @@ const deleteById = async (id) => {
   debugLog(`Deleting leader with id ${id}`);
   const deleted = await leaderRepository.deleteById(id);
   if (!deleted) {
-    throw new ServiceError.NotFound(`Leader with id ${id} not found`, {id});
+    throw ServiceError.notFound(`Leader with id ${id} not found`, {id});
   }
 };
 

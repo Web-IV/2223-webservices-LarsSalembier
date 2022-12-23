@@ -31,7 +31,7 @@ class ServiceError extends Error {
    *
    * @return {ServiceError} The not found error
    */
-  static NotFound(message, details) {
+  static notFound(message, details) {
     return new ServiceError(NOT_FOUND, message, details);
   }
 

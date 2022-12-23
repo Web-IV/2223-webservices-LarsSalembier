@@ -6,8 +6,6 @@ module.exports = {
     await knex(tables.person).del();
     await knex(tables.address).del();
     await knex(tables.leader).del();
-    await knex(tables.headLeader).del();
-    await knex(tables.adultLeader).del();
     await knex(tables.group).del();
     await knex(tables.year).del();
     await knex(tables.event).del();

@@ -33,8 +33,9 @@ const getById = async (id) => {
   debugLog(`Fetching address with id ${id}`);
   const address = await addressRepository.findById(id);
   if (!address) {
-    throw new ServiceError.NotFound(`Address with id ${id} not found`, {id});
+    throw ServiceError.notFound(`Address with id ${id} not found`, {id});
   }
+  return address;
 };
 
 /**
@@ -44,16 +45,16 @@ const getById = async (id) => {
  * @param {string} address.street The street of the address
  * @param {string} address.number The number of the address
  * @param {string} address.city The city of the address
- * @param {number} address.zipCode The zipCode of the address
+ * @param {number} address.zip The zipCode of the address
  *
  * @return {Promise<object>} the newly created address
  */
-const create = async ({street, number, city, zipCode}) => {
+const create = async ({street, number, city, zip}) => {
   const newPlace = {
     street,
     number,
     city,
-    zipCode,
+    zip,
   };
   debugLog('Created new address', newPlace);
   const id = await addressRepository.create(newPlace);
@@ -67,18 +68,18 @@ const create = async ({street, number, city, zipCode}) => {
  * @param {string} address.street The street of the address
  * @param {string} address.number The number of the address
  * @param {string} address.city The city of the address
- * @param {number} address.zipCode The zipCode of the address
+ * @param {number} address.zip The zipCode of the address
  *
  * @return {Promise<object>} the updated address
  *
  * @throws {ServiceError.notFound} if the address is not found
  */
-const updateById = async (id, {street, number, city, zipCode}) => {
+const updateById = async (id, {street, number, city, zip}) => {
   const updatedAddress = {
     street,
     number,
     city,
-    zipCode,
+    zip,
   };
 
   debugLog(`Updated address with id ${id}`, updatedAddress);
@@ -97,7 +98,7 @@ const deleteById = async (id) => {
   debugLog(`Deleting address with id ${id}`);
   const deleted = await addressRepository.deleteById(id);
   if (!deleted) {
-    throw new ServiceError.NotFound(`Address with id ${id} not found`, {id});
+    throw ServiceError.notFound(`Address with id ${id} not found`, {id});
   }
 };
 

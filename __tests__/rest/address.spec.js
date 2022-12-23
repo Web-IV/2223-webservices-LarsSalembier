@@ -69,7 +69,7 @@ describe('Address REST API', () => {
       const response = await request.get(url);
       expect(response.status).toBe(200);
       expect(response.body.count).toBeGreaterThanOrEqual(5);
-      expect(response.body.data.length).toBeGreaterThanOrEqual(5);
+      expect(response.body.items.length).toBeGreaterThanOrEqual(5);
     });
   });
 
@@ -80,7 +80,7 @@ describe('Address REST API', () => {
 
     afterAll(async () => {
       await knex(tables.address)
-          .where('id', dataToDelete.addresses[0].id)
+          .where('id', dataToDelete.addresses[0])
           .delete();
     });
 
@@ -90,16 +90,16 @@ describe('Address REST API', () => {
       expect(response.body).toEqual(data.addresses[0]);
     });
 
-    // test("it should 404 if the address with the given id does not exist",
-    // async () => {
-    //   const response = await request.get(`${url}/999`);
-    //   expect(response.status).toBe(404);
-    // });
+    test('it should 404 if the address with the given id does not exist',
+        async () => {
+          const response = await request.get(`${url}/999`);
+          expect(response.status).toBe(404);
+        });
 
-    // test("it should 400 if the id is not a number", async () => {
-    //   const response = await request.get(`${url}/abc`);
-    //   expect(response.status).toBe(400);
-    // });
+    test('it should 400 if the id is not a number', async () => {
+      const response = await request.get(`${url}/abc`);
+      expect(response.status).toBe(400);
+    });
   });
 
   describe('POST /api/addresses', () => {
@@ -126,76 +126,76 @@ describe('Address REST API', () => {
       addressesToDelete.push(response.body.id);
     });
 
-    // test("it should 400 if the request body is invalid", async () => {
-    //   const response = await request.post(url).send({});
-    //   expect(response.status).toBe(400);
-    // });
+    test('it should 400 if the request body is invalid', async () => {
+      const response = await request.post(url).send({});
+      expect(response.status).toBe(400);
+    });
 
-    // test("it should 400 if the street is missing", async () => {
-    //   const response = await request.post(url).send({
-    //     number: "1000",
-    //     city: "Kaapstad",
-    //     zip: 1234,
-    //   });
-    //   expect(response.status).toBe(400);
-    // });
+    test('it should 400 if the street is missing', async () => {
+      const response = await request.post(url).send({
+        number: '1000',
+        city: 'Kaapstad',
+        zip: 1234,
+      });
+      expect(response.status).toBe(400);
+    });
 
-    // test("it should 400 if the number is missing", async () => {
-    //   const response = await request.post(url).send({
-    //     street: "ABCstraat",
-    //     city: "Kaapstad",
-    //     zip: 1234,
-    //   });
-    //   expect(response.status).toBe(400);
-    // });
+    test('it should 400 if the number is missing', async () => {
+      const response = await request.post(url).send({
+        street: 'ABCstraat',
+        city: 'Kaapstad',
+        zip: 1234,
+      });
+      expect(response.status).toBe(400);
+    });
 
-    // test("it should 400 if the city is missing", async () => {
-    //   const response = await request.post(url).send({
-    //     street: "ABCstraat",
-    //     number: "1000",
-    //     zip: 1234,
-    //   });
-    //   expect(response.status).toBe(400);
-    // });
+    test('it should 400 if the city is missing', async () => {
+      const response = await request.post(url).send({
+        street: 'ABCstraat',
+        number: '1000',
+        zip: 1234,
+      });
+      expect(response.status).toBe(400);
+    });
 
-    // test("it should 400 if the zip is missing", async () => {
-    //   const response = await request.post(url).send({
-    //     street: "ABCstraat",
-    //     number: "1000",
-    //     city: "Kaapstad",
-    //   });
-    //   expect(response.status).toBe(400);
-    // });
+    test('it should 400 if the zip is missing', async () => {
+      const response = await request.post(url).send({
+        street: 'ABCstraat',
+        number: '1000',
+        city: 'Kaapstad',
+      });
+      expect(response.status).toBe(400);
+    });
 
-    // test("it should 400 if the zip is not a number", async () => {
-    //   const response = await request.post(url).send({
-    //     street: "ABCstraat",
-    //     number: "1000",
-    //     city: "Kaapstad",
-    //     zip: "1234",
-    //   });
-    //   expect(response.status).toBe(400);
-    // });
+    test('it should 400 if the zip is not a number', async () => {
+      const response = await request.post(url).send({
+        street: 'ABCstraat',
+        number: '1000',
+        city: 'Kaapstad',
+        zip: 'abcd',
+      });
+      expect(response.status).toBe(400);
+    });
 
-    // test("it should 400 if the zip is not a positive number", async () => {
-    //   const response = await request.post(url).send({
-    //     street: "ABCstraat",
-    //     number: "1000",
-    //     city: "Kaapstad",
-    //     zip: -1234,
-    //   });
-    //   expect(response.status).toBe(400);
-    // });
+    test('it should 400 if the zip is not a positive number', async () => {
+      const response = await request.post(url).send({
+        street: 'ABCstraat',
+        number: '1000',
+        city: 'Kaapstad',
+        zip: -1234,
+      });
+      expect(response.status).toBe(400);
+    });
 
-    // test("it should 400 if the zip is not an integer", async () => {
-    //   const response = await request.post(url).send({
-    //     street: "ABCstraat",
-    //     number: "1000",
-    //     city: "Kaapstad",
-    //     zip: 1234.5,
-    //   });
-    //   expect(response.status).toBe(400);
-    // });
+    test('it should 400 if the zip is not an integer', async () => {
+      const response = await request.post(url).send({
+        street: 'ABCstraat',
+        number: '1000',
+        city: 'Kaapstad',
+        zip: 1234.5,
+      });
+      expect(response.status).toBe(400);
+    });
   });
 
   describe('PUT /api/addresses/:id', () => {
@@ -224,125 +224,125 @@ describe('Address REST API', () => {
       expect(response.body.zip).toBe(9000);
     });
 
-    // test("it should 400 if the request body is invalid", async () => {
-    //   const response = await request.put(`${url}/${data.addresses[0].id}`)
-    // .send({});
-    //   expect(response.status).toBe(400);
-    // });
-
-    // test("it should 400 if the street is missing", async () => {
-    //   const response = await request
-    //     .put(`${url}/${data.addresses[0].id}`)
-    //     .send({
-    //       number: "129",
-    //       city: "Gent",
-    //       zip: 9000,
-    //     });
-    //   expect(response.status).toBe(400);
-    // });
-
-    // test("it should 400 if the number is missing", async () => {
-    //   const response = await request
-    //     .put(`${url}/${data.addresses[0].id}`)
-    //     .send({
-    //       street: "Opvoedingstraat",
-    //       city: "Gent",
-    //       zip: 9000,
-    //     });
-    //   expect(response.status).toBe(400);
-    // });
-
-    // test("it should 400 if the city is missing", async () => {
-    //   const response = await request
-    //     .put(`${url}/${data.addresses[0].id}`)
-    //     .send({
-    //       street: "Opvoedingstraat",
-    //       number: "129",
-    //       zip: 9000,
-    //     });
-    //   expect(response.status).toBe(400);
-    // });
-
-    // test("it should 400 if the zip is missing", async () => {
-    //   const response = await request
-    //     .put(`${url}/${data.addresses[0].id}`)
-    //     .send({
-    //       street: "Opvoedingstraat",
-    //       number: "129",
-    //       city: "Gent",
-    //     });
-    //   expect(response.status).toBe(400);
-    // });
-
-    // test("it should 400 if the zip is not a number", async () => {
-    //   const response = await request
-    //     .put(`${url}/${data.addresses[0].id}`)
-    //     .send({
-    //       street: "Opvoedingstraat",
-    //       number: "129",
-    //       city: "Gent",
-    //       zip: "9000",
-    //     });
-    //   expect(response.status).toBe(400);
-    // });
-
-    // test("it should 400 if the zip is not a positive number", async () => {
-    //   const response = await request
-    //     .put(`${url}/${data.addresses[0].id}`)
-    //     .send({
-    //       street: "Opvoedingstraat",
-    //       number: "129",
-    //       city: "Gent",
-    //       zip: -9000,
-    //     });
-    //   expect(response.status).toBe(400);
-    // });
-
-    // test("it should 400 if the zip is not an integer", async () => {
-    //   const response = await request
-    //     .put(`${url}/${data.addresses[0].id}`)
-    //     .send({
-    //       street: "Opvoedingstraat",
-    //       number: "129",
-    //       city: "Gent",
-    //       zip: 9000.5,
-    //     });
-    //   expect(response.status).toBe(400);
-    // });
-
-    // test("it should 404 if the address with the given id does not exist",
-    // async () => {
-    //   const response = await request.put(`${url}/999`).send({
-    //     street: "Opvoedingstraat",
-    //     number: "129",
-    //     city: "Gent",
-    //     zip: 9000,
-    //   });
-    //   expect(response.status).toBe(404);
-    // });
-
-    describe('DELETE /api/addresses/:id', () => {
-      beforeAll(async () => {
-        await knex(tables.address).insert(data.addresses[0]);
-      });
-
-      test('it should 204 and return nothing', async () => {
-        const response = await request.delete(`${url}/${data.addresses[0].id}`);
-        expect(response.status).toBe(204);
-        expect(response.body).toEqual({});
-      });
-
-      // test("it should 404 if the address with the given id does not exist",
-      // async () => {
-      //   const response = await request.delete(`${url}/999`);
-      //   expect(response.status).toBe(404);
-      // });
-
-      // test("it should 400 if the address with the given id is still in use",
-      // async () => {
-      //   const response = await request.delete(`${url}/1`);
-      //   expect(response.status).toBe(400);
-      // });
+    test('it should 400 if the request body is invalid', async () => {
+      const response = await request.put(`${url}/${data.addresses[0].id}`)
+          .send({});
+      expect(response.status).toBe(400);
     });
+
+    test('it should 400 if the street is missing', async () => {
+      const response = await request
+          .put(`${url}/${data.addresses[0].id}`)
+          .send({
+            number: '129',
+            city: 'Gent',
+            zip: 9000,
+          });
+      expect(response.status).toBe(400);
+    });
+
+    test('it should 400 if the number is missing', async () => {
+      const response = await request
+          .put(`${url}/${data.addresses[0].id}`)
+          .send({
+            street: 'Opvoedingstraat',
+            city: 'Gent',
+            zip: 9000,
+          });
+      expect(response.status).toBe(400);
+    });
+
+    test('it should 400 if the city is missing', async () => {
+      const response = await request
+          .put(`${url}/${data.addresses[0].id}`)
+          .send({
+            street: 'Opvoedingstraat',
+            number: '129',
+            zip: 9000,
+          });
+      expect(response.status).toBe(400);
+    });
+
+    test('it should 400 if the zip is missing', async () => {
+      const response = await request
+          .put(`${url}/${data.addresses[0].id}`)
+          .send({
+            street: 'Opvoedingstraat',
+            number: '129',
+            city: 'Gent',
+          });
+      expect(response.status).toBe(400);
+    });
+
+    test('it should 400 if the zip is not a number', async () => {
+      const response = await request
+          .put(`${url}/${data.addresses[0].id}`)
+          .send({
+            street: 'Opvoedingstraat',
+            number: '129',
+            city: 'Gent',
+            zip: 'abcd',
+          });
+      expect(response.status).toBe(400);
+    });
+
+    test('it should 400 if the zip is not a positive number', async () => {
+      const response = await request
+          .put(`${url}/${data.addresses[0].id}`)
+          .send({
+            street: 'Opvoedingstraat',
+            number: '129',
+            city: 'Gent',
+            zip: -9000,
+          });
+      expect(response.status).toBe(400);
+    });
+
+    test('it should 400 if the zip is not an integer', async () => {
+      const response = await request
+          .put(`${url}/${data.addresses[0].id}`)
+          .send({
+            street: 'Opvoedingstraat',
+            number: '129',
+            city: 'Gent',
+            zip: 9000.5,
+          });
+      expect(response.status).toBe(400);
+    });
+
+    test('it should 404 if the address with the given id does not exist',
+        async () => {
+          const response = await request.put(`${url}/999`).send({
+            street: 'Opvoedingstraat',
+            number: '129',
+            city: 'Gent',
+            zip: 9000,
+          });
+          expect(response.status).toBe(404);
+        });
+  });
+
+  describe('DELETE /api/addresses/:id', () => {
+    beforeAll(async () => {
+      await knex(tables.address).insert(data.addresses[0]);
+    });
+
+    test('it should 204 and return nothing', async () => {
+      const response = await request.delete(`${url}/${data.addresses[0].id}`);
+      expect(response.status).toBe(204);
+      expect(response.body).toEqual({});
+    });
+
+    test('it should 404 if the address with the given id does not exist',
+        async () => {
+          const response = await request.delete(`${url}/999`);
+          expect(response.status).toBe(404);
+        });
+
+    test('it should 404 if the address with the given id is still in use',
+        async () => {
+          const response = await request.delete(`${url}/1`);
+          expect(response.status).toBe(404);
+        });
   });
 });

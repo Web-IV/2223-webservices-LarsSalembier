@@ -35,8 +35,8 @@ const findCount = async () => {
  * Create a new year
  *
  * @param {object} year The year to create
- * @param {number} year.startDate The start date of the year
- * @param {number} year.endDate The end date of the year
+ * @param {Date} year.startDate The start date of the year
+ * @param {Date} year.endDate The end date of the year
  *
  * @return {Promise<number>} id of the newly created year
  */
@@ -59,8 +59,8 @@ const create = async ({startDate, endDate}) => {
  *
  * @param {number} id the id of the year
  * @param {object} year The year to update
- * @param {number} year.startDate The start date of the year
- * @param {number} year.endDate The end date of the year
+ * @param {Date} year.startDate The start date of the year
+ * @param {Date} year.endDate The end date of the year
  *
  * @return {Promise<number>} id of the updated year
  */

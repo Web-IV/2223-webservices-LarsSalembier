@@ -15,6 +15,7 @@ getAllAddresses.validationScheme = {
 
 const getAddressById = async (ctx) => {
   ctx.body = await addressService.getById(ctx.params.id);
+  ctx.status = 200;
 };
 getAddressById.validationScheme = {
   params: {
@@ -23,25 +24,24 @@ getAddressById.validationScheme = {
 };
 
 const createAddress = async (ctx) => {
-  ctx.body = await addressService.create({
-    ...ctx.request.body,
-    zipCode: Number(ctx.request.body.zipCode),
-  });
+  ctx.body = await addressService.create(ctx.request.body);
+  ctx.status = 201;
 };
 createAddress.validationScheme = {
   body: {
-    street: Joi.string().required(),
-    number: Joi.string().required(),
-    city: Joi.string().required(),
-    zipCode: Joi.number().integer().positive().required(),
+    street: Joi.string().required().max(255),
+    number: Joi.string().required().max(255),
+    city: Joi.string().required().max(255),
+    zip: Joi.number().integer().positive().required(),
   },
 };
 
 const updateAddress = async (ctx) => {
-  ctx.body = await addressService.updateById(ctx.params.id, {
-    ...ctx.request.body,
-    zipCode: Number(ctx.request.body.zipCode),
-  });
+  ctx.body = await addressService.updateById(
+      ctx.params.id,
+      ctx.request.body,
+  );
+  ctx.status = 200;
 };
 updateAddress.validationScheme = {
   params: {
@@ -51,7 +51,7 @@ updateAddress.validationScheme = {
     street: Joi.string().required(),
     number: Joi.string().required(),
     city: Joi.string().required(),
-    zipCode: Joi.number().integer().positive().required(),
+    zip: Joi.number().integer().positive().required(),
   },
 };
 

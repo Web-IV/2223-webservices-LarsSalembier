@@ -4,11 +4,13 @@ const validate = require('./_validation');
 
 const ping = async (ctx) => {
   ctx.body = healthService.ping();
+  ctx.status = 200;
 };
 ping.validationScheme = null;
 
 const getVersion = async (ctx) => {
   ctx.body = healthService.getVersion();
+  ctx.status = 200;
 };
 getVersion.validationScheme = null;
 

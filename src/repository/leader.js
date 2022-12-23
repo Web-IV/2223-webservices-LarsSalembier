@@ -15,6 +15,11 @@ const SELECT_COLUMNS = [
   `${tables.year}.id as year_id`,
   `${tables.year}.start_date as year_start_date`,
   `${tables.year}.end_date as year_end_date`,
+  `${tables.address}.id as address_id`,
+  `${tables.address}.street as address_street`,
+  `${tables.address}.number as address_number`,
+  `${tables.address}.city as address_city`,
+  `${tables.address}.zip as address_zip`,
 ];
 
 const formatLeader = ({
@@ -30,6 +35,11 @@ const formatLeader = ({
   year_id: yearId,
   year_start_date: yearStartDate,
   year_end_date: yearEndDate,
+  address_id: addressId,
+  address_street: addressStreet,
+  address_number: addressNumber,
+  address_city: addressCity,
+  address_zip: addressZip,
   ...rest
 }) => ({
   ...rest,
@@ -38,6 +48,13 @@ const formatLeader = ({
     first_name: personFirstName,
     last_name: personLastName,
     cellphone: personCellphone,
+    address: {
+      id: addressId,
+      street: addressStreet,
+      number: addressNumber,
+      city: addressCity,
+      zip: addressZip,
+    },
   },
   group: {
     id: groupId,
@@ -68,6 +85,8 @@ const findAll = async () => {
       .join(tables.group, `${tables.group}.id`, '=',
           `${tables.leader}.group_id`)
       .join(tables.year, `${tables.year}.id`, '=', `${tables.leader}.year_id`)
+      .join(tables.address, `${tables.address}.id`, '=',
+          `${tables.person}.address_id`)
       .orderBy(`${tables.person}.last_name`, 'asc');
 
   return leaders.map(formatLeader);
@@ -99,6 +118,8 @@ const findById = async (id) => {
       .join(tables.group, `${tables.group}.id`, '=',
           `${tables.leader}.group_id`)
       .join(tables.year, `${tables.year}.id`, '=', `${tables.leader}.year_id`)
+      .join(tables.address, `${tables.address}.id`, '=',
+          `${tables.person}.address_id`)
       .where(`${tables.leader}.id`, id);
 
   return leader && formatLeader(leader);

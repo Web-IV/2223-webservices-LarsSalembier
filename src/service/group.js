@@ -33,7 +33,7 @@ const getById = async (id) => {
   debugLog(`Fetching group with id ${id}`);
   const group = await groupRepository.findById(id);
   if (!group) {
-    throw new ServiceError.NotFound(`Group with id ${id} not found`, {id});
+    throw ServiceError.notFound(`Group with id ${id} not found`, {id});
   }
   return group;
 };
@@ -88,7 +88,7 @@ const deleteById = async (id) => {
   debugLog(`Deleting group with id ${id}`);
   const deleted = groupRepository.deleteById(id);
   if (!deleted) {
-    throw new ServiceError.NotFound(`Group with id ${id} not found`, {id});
+    throw ServiceError.notFound(`Group with id ${id} not found`, {id});
   }
 };
 

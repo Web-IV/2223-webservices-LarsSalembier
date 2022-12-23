@@ -5,6 +5,7 @@ const validate = require('./_validation');
 
 const getAllLeaders = async (ctx) => {
   ctx.body = await leaderService.getAll();
+  ctx.status = 200;
 };
 getAllLeaders.validationScheme = {
   query: Joi.object({
@@ -15,6 +16,7 @@ getAllLeaders.validationScheme = {
 
 const getLeaderById = async (ctx) => {
   ctx.body = await leaderService.getById(ctx.params.id);
+  ctx.status = 200;
 };
 getLeaderById.validationScheme = {
   params: {
@@ -28,6 +30,7 @@ const createLeader = async (ctx) => {
     groupId: Number(ctx.request.body.groupId),
     yearId: Number(ctx.request.body.yearId),
   });
+  ctx.status = 201;
 };
 createLeader.validationScheme = {
   body: {
@@ -43,6 +46,7 @@ const updateLeaderById = async (ctx) => {
     groupId: Number(ctx.request.body.groupId),
     yearId: Number(ctx.request.body.yearId),
   });
+  ctx.status = 200;
 };
 updateLeaderById.validationScheme = {
   params: {

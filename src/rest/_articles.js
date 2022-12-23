@@ -5,6 +5,7 @@ const validate = require('./_validation');
 
 const getAllArticles = async (ctx) => {
   ctx.body = await articleService.getAll();
+  ctx.status = 200;
 };
 getAllArticles.validationScheme = {
   query: Joi.object({
@@ -15,6 +16,7 @@ getAllArticles.validationScheme = {
 
 const getArticleById = async (ctx) => {
   ctx.body = await articleService.getById(ctx.params.id);
+  ctx.status = 200;
 };
 getArticleById.validationScheme = {
   params: {
@@ -24,6 +26,7 @@ getArticleById.validationScheme = {
 
 const createArticle = async (ctx) => {
   ctx.body = await articleService.create(ctx.request.body);
+  ctx.status = 201;
 };
 createArticle.validationScheme = {
   body: {
@@ -34,6 +37,7 @@ createArticle.validationScheme = {
 
 const updateArticle = async (ctx) => {
   ctx.body = await articleService.updateById(ctx.params.id, ctx.request.body);
+  ctx.status = 200;
 };
 updateArticle.validationScheme = {
   params: {

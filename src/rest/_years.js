@@ -5,6 +5,7 @@ const validate = require('./_validation');
 
 const getAllYears = async (ctx) => {
   ctx.body = await yearService.getAll();
+  ctx.status = 200;
 };
 getAllYears.validationScheme = {
   query: Joi.object({
@@ -14,7 +15,13 @@ getAllYears.validationScheme = {
 };
 
 const getYearById = async (ctx) => {
-  ctx.body = await yearService.getById(ctx.params.id);
+  const year = await yearService.getById(ctx.params.id);
+  ctx.body = {
+    ...year,
+    startDate: new Date(year.startDate),
+    endDate: new Date(year.endDate),
+  };
+  ctx.status = 200;
 };
 getYearById.validationScheme = {
   params: {
@@ -28,6 +35,7 @@ const createYear = async (ctx) => {
     startDate: new Date(ctx.request.body.startDate),
     endDate: new Date(ctx.request.body.endDate),
   });
+  ctx.status = 201;
 };
 createYear.validationScheme = {
   body: {
@@ -42,6 +50,7 @@ const updateYear = async (ctx) => {
     startDate: new Date(ctx.request.body.startDate),
     endDate: new Date(ctx.request.body.endDate),
   });
+  ctx.status = 200;
 };
 updateYear.validationScheme = {
   params: {

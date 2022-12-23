@@ -7,7 +7,7 @@ const {getLogger} = require('../core/logging');
  * @return {Promise<Array>} list of addresses
  */
 const findAll = () => {
-  return getKnex()(tables.address).select().orderBy('name', 'ASC');
+  return getKnex()(tables.address).select().orderBy('street', 'ASC');
 };
 
 /**
@@ -27,7 +27,7 @@ const findById = (id) => {
  * @return {Promise<number>} the total number of addresses
  */
 const findCount = async () => {
-  const [count] = await getKnex()(tables.place).count();
+  const [count] = await getKnex()(tables.address).count();
   return count['count(*)'];
 };
 
@@ -38,17 +38,17 @@ const findCount = async () => {
  * @param {string} address.street The street of the address
  * @param {string} address.number The number of the address
  * @param {string} address.city The city of the address
- * @param {number} address.zipCode The zipCode of the address
+ * @param {number} address.zip The zipCode of the address
  *
  * @return {Promise<number>} id of the newly created address
  */
-const create = async ({street, number, city, zipCode}) => {
+const create = async ({street, number, city, zip}) => {
   try {
     const [id] = await getKnex()(tables.address).insert({
       street,
       number,
       city,
-      zip_code: zipCode,
+      zip,
     });
     return id;
   } catch (error) {
@@ -66,17 +66,17 @@ const create = async ({street, number, city, zipCode}) => {
  * @param {string} address.street The street of the address
  * @param {string} address.number The number of the address
  * @param {string} address.city The city of the address
- * @param {number} address.zipCode The zipCode of the address
+ * @param {number} address.zip The zipCode of the address
  *
  * @return {Promise<number>} id of the updated address
  */
-const updateById = async (id, {street, number, city, zipCode}) => {
+const updateById = async (id, {street, number, city, zip}) => {
   try {
     await getKnex()(tables.address).where('id', id).update({
       street,
       number,
       city,
-      zip_code: zipCode,
+      zip,
     });
     return id;
   } catch (error) {

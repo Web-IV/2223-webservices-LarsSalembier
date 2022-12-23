@@ -5,6 +5,7 @@ const validate = require('./_validation');
 
 const getAllGroups = async (ctx) => {
   ctx.body = await groupService.getAll();
+  ctx.status = 200;
 };
 getAllGroups.validationScheme = {
   query: Joi.object({
@@ -15,6 +16,7 @@ getAllGroups.validationScheme = {
 
 const getGroupById = async (ctx) => {
   ctx.body = await groupService.getById(ctx.params.id);
+  ctx.status = 200;
 };
 getGroupById.validationScheme = {
   params: {
@@ -24,6 +26,7 @@ getGroupById.validationScheme = {
 
 const createGroup = async (ctx) => {
   ctx.body = await groupService.create(ctx.request.body);
+  ctx.status = 201;
 };
 createGroup.validationScheme = {
   body: {
@@ -36,6 +39,7 @@ createGroup.validationScheme = {
 
 const updateGroup = async (ctx) => {
   ctx.body = await groupService.updateById(ctx.params.id, ctx.request.body);
+  ctx.status = 200;
 };
 updateGroup.validationScheme = {
   params: {

@@ -5,6 +5,7 @@ const validate = require('./_validation');
 
 const getAllEvents = async (ctx) => {
   ctx.body = await eventService.getAll();
+  ctx.status = 200;
 };
 getAllEvents.validationScheme = {
   query: Joi.object({
@@ -15,6 +16,7 @@ getAllEvents.validationScheme = {
 
 const getEventById = async (ctx) => {
   ctx.body = await eventService.getById(ctx.params.id);
+  ctx.status = 200;
 };
 getEventById.validationScheme = {
   params: {
@@ -32,6 +34,7 @@ const createEvent = async (ctx) => {
       null,
     yearId: Number(ctx.request.body.yearId),
   });
+  ctx.status = 201;
 };
 createEvent.validationScheme = {
   body: {
@@ -55,6 +58,7 @@ const updateEvent = async (ctx) => {
       null,
     yearId: Number(ctx.request.body.yearId),
   });
+  ctx.status = 200;
 };
 updateEvent.validationScheme = {
   params: {

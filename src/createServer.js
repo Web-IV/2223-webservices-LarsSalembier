@@ -3,10 +3,19 @@ const config = require('config');
 const koaCors = require('@koa/cors');
 const bodyParser = require('koa-bodyparser');
 const emoji = require('node-emoji');
-const {initializeLogger, getLogger} = require('./core/logging');
-const ServiceError = require('./core/ServiceError');
-const {initializeData, shutdownData} = require('./data');
-const {serializeError} = require('serialize-error');
+const {
+  serializeError,
+} = require('serialize-error');
+
+const {
+  initializeLogger,
+  getLogger,
+} = require('./core/logging');
+const ServiceError = require('./core/serviceError');
+const {
+  initializeData,
+  shutdownData,
+} = require('./data');
 const installRest = require('./rest');
 
 const NODE_ENV = config.get('env');
@@ -19,7 +28,9 @@ module.exports = async function createServer() {
   initializeLogger({
     level: LOG_LEVEL,
     disabled: LOG_DISABLED,
-    defaultMeta: {env: NODE_ENV},
+    defaultMeta: {
+      NODE_ENV,
+    },
   });
 
   await initializeData();
@@ -30,9 +41,11 @@ module.exports = async function createServer() {
   app.use(
       koaCors({
         origin: (ctx) => {
-          if (CORS_ORIGINS.includes(ctx.request.header.origin)) {
+          if (CORS_ORIGINS.indexOf(ctx.request.header.origin) !== -1) {
             return ctx.request.header.origin;
           }
+          // Not a valid domain at this point, let's return the first valid as
+          // we should return a string
           return CORS_ORIGINS[0];
         },
         allowHeaders: ['Accept', 'Content-Type', 'Authorization'],
@@ -59,7 +72,9 @@ module.exports = async function createServer() {
     try {
       await next();
 
-      logger.info(`${getStatusEmoji()} ${ctx.method} ${ctx.status} ${ctx.url}`);
+      logger.info(
+          `${getStatusEmoji()} ${ctx.method} ${ctx.status} ${ctx.url}`,
+      );
     } catch (error) {
       logger.error(`${emoji.get('x')} ${ctx.method} ${ctx.status} ${ctx.url}`, {
         error,
@@ -78,6 +93,7 @@ module.exports = async function createServer() {
           code: 'NOT_FOUND',
           message: `Unknown resource: ${ctx.url}`,
         };
+        ctx.status = 404;
       }
     } catch (error) {
       const logger = getLogger();
@@ -122,13 +138,19 @@ module.exports = async function createServer() {
     getApp() {
       return app;
     },
+
     start() {
       return new Promise((resolve) => {
-        app.listen(9000);
-        logger.info('🚀 Server listening on http://localhost:9000');
+        // To avoid EADDRINUSE error when running tests
+        if (NODE_ENV !== 'test') {
+          const port = process.env.PORT || 9000;
+          app.listen(port);
+          logger.info(`🚀 Server listening on http://localhost:${port}`);
+        }
         resolve();
       });
     },
+
     async stop() {
       {
         app.removeAllListeners();

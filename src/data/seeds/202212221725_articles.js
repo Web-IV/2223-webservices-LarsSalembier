@@ -7,111 +7,22 @@ module.exports = {
       {
         id: 1,
         title: '10 Tips for Effective Time Management',
-        content:
-```
-Time management is an important skill to have in today's
-fast-paced world. Here are 10 tips to help you manage your time more
-effectively:
-1. Set clear goals and priorities.
-2. Use a planner or calendar to keep track of your schedule.
-3. Break larger tasks into smaller, more manageable chunks.
-4. Avoid multitasking and focus on one thing at a time.
-5. Set aside dedicated blocks of time for specific tasks.
-6. Use the Pomodoro Technique to help with focus and
-productivity.
-7. Take breaks and give yourself time to relax and recharge.
-8. Limit distractions, such as turning off notifications
-on your phone.
-9. Say no to unnecessary commitments and delegate tasks
-when possible.
-10. Review your progress regularly and make adjustments
-as needed.
-
-By following these tips, you can improve your time
-management skills and get more done in less time.
-```,
+        content: 'Article content',
       },
       {
         id: 2,
         title: '5 Benefits of Meditation',
-        content:
-```
-Meditation is a simple yet powerful practice that can
-have numerous benefits for both the mind and body. Here are just a few:
-
-1. Reduces stress and anxiety: Meditation helps to calm
-the mind and bring a sense of inner peace and balance.
-2. Improves focus and concentration: Regular meditation
-can help improve attention span and cognitive function.
-3. Increases self-awareness: By quieting the mind and
-focusing on the present moment, meditation can help increase
-self-awareness and introspection.
-4. Enhances overall well-being: Meditation has been
-shown to improve physical health, including reducing blood
-pressure and improving sleep quality.
-5. Increases happiness and contentment: Regular meditation
-can lead to increased feelings of joy, gratitude, and
-overall well-being.
-
-So if you're looking to reduce stress, improve your focus,
-and increase overall well-being, consider incorporating
-meditation into your daily routine.
-```,
+        content: 'Article content',
       },
       {
         id: 3,
         title: 'The Benefits of a Plant-Based Diet',
-        content:
-```
-There are many benefits to following a plant-based diet,
-which is centered around whole, unprocessed plant foods such as
-vegetables, fruits, legumes, nuts, and seeds. Some of these benefits
-include:
-
-1. Weight loss: Plant-based diets are typically lower in
-calories and fat than diets that include animal products,
-which can help with weight loss.
-2. Improved heart health: Plant-based diets are high in
-fiber, antioxidants, and heart-healthy unsaturated fats,
-which can help reduce the risk of heart disease.
-3. Lower risk of chronic diseases: Plant-based diets have
-been linked to a lower risk of chronic diseases such as
-diabetes, cancer, and obesity.
-4. Increased energy: Plant-based diets are rich in nutrients
-that can help improve energy levels and overall well-being.
-5. Better digestion: Plant-based diets are high in fiber,
-which can help improve digestion and regularity.
-
-If you're considering switching to a plant-based diet, it's
-important to ensure that you're getting all the necessary
-nutrients. This may involve taking supplements or
-incorporating fortified foods into your diet.
-```,
+        content: 'Article content',
       },
       {
         id: 4,
         title: 'The Importance of Stretching',
-        content:
-```
-Starting your day off on the right foot can set the tone for the rest of the
-day. A morning routine can help you start your day feeling organized, energized,
-and productive. Here are a few benefits of having a morning routine:
-
-1. Increases productivity: A morning routine can help you get into a productive
-mindset and set you up for a successful day.
-2. Improves mental clarity: Taking time to relax and clear your mind in the
-morning can help improve focus and decision-making skills.
-3. Enhances well-being: Taking time for self-care in the morning, such as
-exercising or meditating, can improve overall well-being.
-4. Reduces stress: Having a set routine can help reduce stress and anxiety by
-providing a sense of structure and purpose.
-5. Promotes healthy habits: Incorporating healthy habits, such as eating a
-nutritious breakfast or drinking water, into your morning routine can help
-improve overall health and well-being.
-
-So if you're looking to improve productivity, reduce stress, and promote
-healthy habits, consider establishing a morning routine.
-```,
+        content: 'Article content',
       },
     ]);
   },

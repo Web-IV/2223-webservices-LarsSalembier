@@ -5,6 +5,7 @@ const validate = require('./_validation');
 
 const getAllPeople = async (ctx) => {
   ctx.body = await personService.getAll();
+  ctx.status = 200;
 };
 getAllPeople.validationScheme = {
   query: Joi.object({
@@ -15,6 +16,7 @@ getAllPeople.validationScheme = {
 
 const getPersonById = async (ctx) => {
   ctx.body = await personService.getById(ctx.params.id);
+  ctx.status = 200;
 };
 getPersonById.validationScheme = {
   params: {
@@ -27,6 +29,7 @@ const createPerson = async (ctx) => {
     ...ctx.request.body,
     addressId: Number(ctx.request.body.addressId),
   });
+  ctx.status = 201;
 };
 createPerson.validationScheme = {
   body: {
@@ -42,6 +45,7 @@ const updatePerson = async (ctx) => {
     ...ctx.request.body,
     addressId: Number(ctx.request.body.addressId),
   });
+  ctx.status = 200;
 };
 updatePerson.validationScheme = {
   params: {

@@ -8,12 +8,15 @@ const {getKnex} = require('../src/data');
  *
  * @param {Function} setter - Setter which gives access to the supertest agent
  * and the Knex instance
+ *
+ * @return {supertest.SuperAgentTest} - Supertest agent
  */
 const withServer = (setter) => {
   let server;
 
   beforeAll(async () => {
     server = await createServer();
+    server.start();
 
     setter({
       knex: getKnex(),
@@ -25,6 +28,8 @@ const withServer = (setter) => {
     // Cleanup resources!
     await server.stop();
   });
+
+  return server;
 };
 
 module.exports = {

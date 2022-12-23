@@ -33,7 +33,7 @@ const getById = async (id) => {
   debugLog(`Fetching article with id ${id}`);
   const article = await articleRepository.findById(id);
   if (!article) {
-    throw new ServiceError.NotFound(`Article with id ${id} not found`, {id});
+    throw ServiceError.notFound(`Article with id ${id} not found`, {id});
   }
   return article;
 };
@@ -87,7 +87,7 @@ const deleteById = async (id) => {
   debugLog(`Deleting article with id ${id}`);
   const deleted = await articleRepository.deleteById(id);
   if (!deleted) {
-    throw new ServiceError.NotFound(`Article with id ${id} not found`, {id});
+    throw ServiceError.notFound(`Article with id ${id} not found`, {id});
   }
 };
 

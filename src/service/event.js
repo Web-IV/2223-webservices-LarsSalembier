@@ -33,7 +33,7 @@ const getById = async (id) => {
   debugLog(`Fetching event with id ${id}`);
   const event = await eventRepository.findById(id);
   if (!event) {
-    throw new ServiceError.NotFound(`Event with id ${id} not found`, {id});
+    throw ServiceError.notFound(`Event with id ${id} not found`, {id});
   }
   return event;
 };
@@ -93,7 +93,7 @@ const deleteById = async (id) => {
   debugLog(`Deleting event with id ${id}`);
   const deleted = await eventRepository.deleteById(id);
   if (!deleted) {
-    throw new ServiceError.NotFound(`Event with id ${id} not found`, {id});
+    throw ServiceError.notFound(`Event with id ${id} not found`, {id});
   }
 };
 
