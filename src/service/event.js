@@ -1,4 +1,5 @@
 const { getLogger } = require("../core/logging");
+const ServiceError = require("../core/ServiceError");
 const eventRepository = require("../repository/event");
 
 const debugLog = (message, meta = {}) => {
@@ -24,12 +25,14 @@ const getAll = async () => {
  * @param {number} id the id of the event
  *
  * @returns {Promise<object>} the event
+ *
+ * @throws {ServiceError.notFound} if the event is not found
  */
 const getById = async (id) => {
   debugLog(`Fetching event with id ${id}`);
   const event = await eventRepository.findById(id);
   if (!event) {
-    throw new Error(`Event with id ${id} not found`);
+    throw new ServiceError.notFound(`Event with id ${id} not found`, { id });
   }
   return event;
 };
@@ -68,6 +71,8 @@ const create = async (event) => {
  * @param {number} event.yearId The id of the year of the event
  *
  * @returns {Promise<object>} the updated event
+ *
+ * @throws {ServiceError.notFound} if the event is not found
  */
 const updateById = async (id, updatedEventData) => {
   debugLog(`Updating event with id ${id}`, updatedEventData);
@@ -79,10 +84,15 @@ const updateById = async (id, updatedEventData) => {
  * Delete an event by id
  *
  * @param {number} id The id of the event to delete
+ *
+ * @throws {ServiceError.notFound} if the event is not found
  */
 const deleteById = async (id) => {
   debugLog(`Deleting event with id ${id}`);
-  await eventRepository.deleteById(id);
+  const deleted = await eventRepository.deleteById(id);
+  if (!deleted) {
+    throw new ServiceError.notFound(`Event with id ${id} not found`, { id });
+  }
 };
 
 module.exports = {

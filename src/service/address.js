@@ -1,4 +1,5 @@
 const { getLogger } = require("../core/logging");
+const ServiceError = require("../core/ServiceError");
 const addressRepository = require("../repository/address");
 
 const debugLog = (message, meta = {}) => {
@@ -24,10 +25,15 @@ const getAll = async () => {
  * @param {number} id The id of the address to fetch
  *
  * @returns {Promise<object>} the address
+ *
+ * @throws {ServiceError.notFound} if the address is not found
  */
-const getById = (id) => {
+const getById = async (id) => {
   debugLog(`Fetching address with id ${id}`);
-  return addressRepository.findById(id);
+  const address = await addressRepository.findById(id);
+  if (!address) {
+    throw new ServiceError.notFound(`Address with id ${id} not found`, { id });
+  }
 };
 
 /**
@@ -63,6 +69,8 @@ const create = async ({ street, number, city, zipCode }) => {
  * @param {number} address.zipCode The zipCode of the address
  *
  * @returns {Promise<object>} the updated address
+ *
+ * @throws {ServiceError.notFound} if the address is not found
  */
 const updateById = async (id, { street, number, city, zipCode }) => {
   const updatedAddress = {
@@ -71,6 +79,7 @@ const updateById = async (id, { street, number, city, zipCode }) => {
     city,
     zipCode,
   };
+
   debugLog(`Updated address with id ${id}`, updatedAddress);
   await addressRepository.updateById(id, updatedAddress);
   return getById(id);
@@ -80,10 +89,15 @@ const updateById = async (id, { street, number, city, zipCode }) => {
  * Delete an address
  *
  * @param {number} id The id of the address to delete
+ *
+ * @throws {ServiceError.notFound} if the address is not found
  */
 const deleteById = async (id) => {
   debugLog(`Deleting address with id ${id}`);
-  await addressRepository.deleteById(id);
+  const deleted = await addressRepository.deleteById(id);
+  if (!deleted) {
+    throw new ServiceError.notFound(`Address with id ${id} not found`, { id });
+  }
 };
 
 module.exports = {

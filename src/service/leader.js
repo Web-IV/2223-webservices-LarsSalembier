@@ -1,4 +1,5 @@
 const { getLogger } = require("../core/logging");
+const ServiceError = require("../core/ServiceError");
 const leaderRepository = require("../repository/leader");
 
 const debugLog = (message, meta = {}) => {
@@ -24,12 +25,14 @@ const getAll = async () => {
  * @param {number} id the id of the leader
  *
  * @returns {Promise<object>} the leader
+ *
+ * @throws {ServiceError.notFound} if the leader is not found
  */
 const getById = async (id) => {
   debugLog(`Fetching leader with id ${id}`);
   const leader = await leaderRepository.findById(id);
   if (!leader) {
-    throw new Error(`Leader with id ${id} not found`);
+    throw new ServiceError.notFound(`Leader with id ${id} not found`, { id });
   }
   return leader;
 };
@@ -60,6 +63,8 @@ const create = async (leader) => {
  * @param {number} leader.yearId The id of the year of the leader
  *
  * @returns {Promise<object>} the updated leader
+ *
+ * @throws {ServiceError.notFound} if the leader is not found
  */
 const updateById = async (id, updatedLeaderData) => {
   debugLog(`Updating leader with id ${id}`, updatedLeaderData);
@@ -71,10 +76,15 @@ const updateById = async (id, updatedLeaderData) => {
  * Delete a leader by id
  *
  * @param {number} id The id of the leader to delete
+ *
+ * @throws {ServiceError.notFound} if the leader is not found
  */
 const deleteById = async (id) => {
   debugLog(`Deleting leader with id ${id}`);
-  await leaderRepository.deleteById(id);
+  const deleted = await leaderRepository.deleteById(id);
+  if (!deleted) {
+    throw new ServiceError.notFound(`Leader with id ${id} not found`, { id });
+  }
 };
 
 module.exports = {

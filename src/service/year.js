@@ -1,4 +1,5 @@
 const { getLogger } = require("../core/logging");
+const ServiceError = require("../core/ServiceError");
 const yearRepository = require("../repository/year");
 
 const debugLog = (message, meta = {}) => {
@@ -24,10 +25,16 @@ const getAll = async () => {
  * @param {number} id the id of the year
  *
  * @returns {Promise<object>} the year
+ *
+ * @throws {ServiceError.notFound} if the year is not found
  */
 const getById = (id) => {
   debugLog(`Fetching year with id ${id}`);
-  return yearRepository.findById(id);
+  const year = yearRepository.findById(id);
+  if (!year) {
+    throw new ServiceError.notFound(`Year with id ${id} not found`, { id });
+  }
+  return year;
 };
 
 /**
@@ -49,7 +56,7 @@ const create = async ({ startDate, endDate }) => {
 };
 
 /**
- * Update an year by id
+ * Update a year by id
  *
  * @param {number} id the id of the year
  * @param {object} year the year to update
@@ -57,6 +64,8 @@ const create = async ({ startDate, endDate }) => {
  * @param {string} year.endDate the end date of the year
  *
  * @returns {Promise<object>} the updated year
+ *
+ * @throws {ServiceError.notFound} if the year is not found
  */
 const updateById = async (id, { startDate, endDate }) => {
   const updatedYear = { startDate, endDate };
@@ -68,13 +77,18 @@ const updateById = async (id, { startDate, endDate }) => {
 };
 
 /**
- * Delete an year by id
+ * Delete a year by id
  *
  * @param {number} id the id of the year
+ *
+ * @throws {ServiceError.notFound} if the year is not found
  */
 const deleteById = async (id) => {
   debugLog(`Deleting year with id ${id}`);
-  await yearRepository.deleteById(id);
+  const deleted = yearRepository.deleteById(id);
+  if (!deleted) {
+    throw new ServiceError.notFound(`Year with id ${id} not found`, { id });
+  }
 };
 
 module.exports = {

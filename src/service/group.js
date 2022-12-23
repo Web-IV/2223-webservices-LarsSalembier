@@ -1,4 +1,5 @@
 const { getLogger } = require("../core/logging");
+const ServiceError = require("../core/ServiceError");
 const groupRepository = require("../repository/group");
 
 const debugLog = (message, meta = {}) => {
@@ -24,10 +25,16 @@ const getAll = async () => {
  * @param {number} id the id of the group
  *
  * @returns {Promise<object>} the group
+ *
+ * @throws {ServiceError.notFound} if the group is not found
  */
-const getById = (id) => {
+const getById = async (id) => {
   debugLog(`Fetching group with id ${id}`);
-  return groupRepository.findById(id);
+  const group = await groupRepository.findById(id);
+  if (!group) {
+    throw new ServiceError.notFound(`Group with id ${id} not found`, { id });
+  }
+  return group;
 };
 
 /**
@@ -59,6 +66,8 @@ const create = async ({ name, color, mascotName, targetAudience }) => {
  * @param {string} group.targetAudience the target audience of the group
  *
  * @returns {Promise<object>} the updated group
+ *
+ * @throws {ServiceError.notFound} if the group is not found
  */
 const updateById = async (id, { name, color, mascotName, targetAudience }) => {
   const updatedGroup = { name, color, mascotName, targetAudience };
@@ -71,10 +80,15 @@ const updateById = async (id, { name, color, mascotName, targetAudience }) => {
  * Delete a group by id
  *
  * @param {number} id the id of the group
+ *
+ * @throws {ServiceError.notFound} if the group is not found
  */
 const deleteById = async (id) => {
   debugLog(`Deleting group with id ${id}`);
-  await groupRepository.deleteById(id);
+  const deleted = groupRepository.deleteById(id);
+  if (!deleted) {
+    throw new ServiceError.notFound(`Group with id ${id} not found`, { id });
+  }
 };
 
 module.exports = {

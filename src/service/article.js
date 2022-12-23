@@ -1,4 +1,5 @@
 const { getLogger } = require("../core/logging");
+const ServiceError = require("../core/ServiceError");
 const articleRepository = require("../repository/article");
 
 const debugLog = (message, meta = {}) => {
@@ -24,10 +25,16 @@ const getAll = async () => {
  * @param {number} id the id of the article
  *
  * @returns {Promise<object>} the article
+ *
+ * @throws {ServiceError.notFound} if the article is not found
  */
-const getById = (id) => {
+const getById = async (id) => {
   debugLog(`Fetching article with id ${id}`);
-  return articleRepository.findById(id);
+  const article = await articleRepository.findById(id);
+  if (!article) {
+    throw new ServiceError.notFound(`Article with id ${id} not found`, { id });
+  }
+  return article;
 };
 
 /**
@@ -55,6 +62,8 @@ const create = async ({ title, content }) => {
  * @param {string} article.content the content of the article
  *
  * @returns {Promise<object>} the updated article
+ *
+ * @throws {ServiceError.notFound} if the article is not found
  */
 const updateById = async (id, { title, content }) => {
   const updatedArticle = { title, content };
@@ -69,10 +78,15 @@ const updateById = async (id, { title, content }) => {
  * Delete an article by id
  *
  * @param {number} id the id of the article
+ *
+ * @throws {ServiceError.notFound} if the article is not found
  */
 const deleteById = async (id) => {
   debugLog(`Deleting article with id ${id}`);
-  await articleRepository.deleteById(id);
+  const deleted = await articleRepository.deleteById(id);
+  if (!deleted) {
+    throw new ServiceError.notFound(`Article with id ${id} not found`, { id });
+  }
 };
 
 module.exports = {

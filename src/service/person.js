@@ -1,4 +1,5 @@
 const { getLogger } = require("../core/logging");
+const ServiceError = require("../core/ServiceError");
 const personRepository = require("../repository/person");
 
 const debugLog = (message, meta = {}) => {
@@ -24,12 +25,14 @@ const getAll = async () => {
  * @param {number} id the id of the person
  *
  * @returns {Promise<object>} the person
+ *
+ * @throws {ServiceError.notFound} if the person is not found
  */
 const getById = async (id) => {
   debugLog(`Fetching person with id ${id}`);
   const person = await personRepository.findById(id);
   if (!person) {
-    throw new Error(`Person with id ${id} not found`);
+    throw new ServiceError.notFound(`Person with id ${id} not found`, { id });
   }
   return person;
 };
@@ -58,7 +61,10 @@ const create = async (person) => {
  * @param {string} person.lastName The last name of the person
  * @param {string} person.cellphone The cellphone of the person
  * @param {number} person.addressId The id of the address of the person
+ *
  * @returns {Promise<object>} the updated person
+ *
+ * @throws {ServiceError.notFound} if the person is not found
  */
 const updateById = async (id, updatedPersonData) => {
   debugLog(`Updating person with id ${id}`, updatedPersonData);
@@ -70,10 +76,15 @@ const updateById = async (id, updatedPersonData) => {
  * Delete a person by id
  *
  * @param {number} id The id of the person to delete
+ *
+ * @throws {ServiceError.notFound} if the person is not found
  */
 const deleteById = async (id) => {
   debugLog(`Deleting person with id ${id}`);
-  await personRepository.deleteById(id);
+  const deleted = await personRepository.deleteById(id);
+  if (!deleted) {
+    throw new ServiceError.notFound(`Person with id ${id} not found`, { id });
+  }
 };
 
 module.exports = {
